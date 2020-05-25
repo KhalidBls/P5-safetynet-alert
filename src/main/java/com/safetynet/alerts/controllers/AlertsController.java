@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.safetynet.alerts.models.*;
 import com.safetynet.alerts.repositories.AddressEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,10 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.safetynet.alerts.models.Children;
-import com.safetynet.alerts.models.Firestation;
-import com.safetynet.alerts.models.Medicalrecord;
-import com.safetynet.alerts.models.Person;
 import com.safetynet.alerts.repositories.ChildrenEntity;
 import com.safetynet.alerts.repositories.EntitiesRepository;
 import com.safetynet.alerts.repositories.PersonsOfStations;
@@ -131,16 +128,15 @@ public class AlertsController {
 	//A METTRE EN PLACE
 	@GetMapping("/fire")
 	public AddressEntity afficherHabitants(@RequestParam(name="address", required = true)String address) {
-
 		AddressEntity addressEntity = new AddressEntity();
 		List<Person> personFromAddress = repo.getPersons()
 				.stream()
 				.filter(c -> c.getAddress().equals(address))
 				.collect(Collectors.toList());
 
-		for (Person person : personFromAddress) {
-			addressEntity.getPersonOfAddress().add(new Person(person.getLastName(),person.getPhone(),
-					person.getAge(),person.getMedications(),person.getAllergies()));
+		for (Person person: personFromAddress ) {
+			addressEntity.getPersonOfAddress().add(new PersonOfAddress(person.getLastName(),person.getPhone()
+					,person.getAge(),person.getMedications(),person.getAllergies()));
 			addressEntity.setFirestationNumber(person.getFirestationNumber());
 		}
 

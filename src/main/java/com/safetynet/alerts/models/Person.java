@@ -65,6 +65,7 @@ public class Person {
 	}
 
 	public Person(String lastName, String phone, Integer age, List<String> medications, List<String> allergies) {
+		super();
 		this.lastName = lastName;
 		this.phone = phone;
 		this.age = age;
