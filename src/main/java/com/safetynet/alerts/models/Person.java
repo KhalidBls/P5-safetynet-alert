@@ -4,8 +4,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -33,7 +35,10 @@ public class Person {
 	private Integer age;
 	@JsonIgnore
 	private String firestationNumber;
-
+	@JsonIgnore
+	private List<String> medications = new ArrayList<>();
+	@JsonIgnore
+	private List<String> allergies = new ArrayList<>();
 
 
 
@@ -44,9 +49,11 @@ public class Person {
 		this.address = address;
 		this.phone = phone;
 	}
-	
+
+	public Person(){};
+
 	public Person(String firstName, String lastName, String address, String city, String zip, String phone,
-			String email) {
+				  String email) {
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -56,7 +63,15 @@ public class Person {
 		this.phone = phone;
 		this.email = email;
 	}
-	
+
+	public Person(String lastName, String phone, Integer age, List<String> medications, List<String> allergies) {
+		this.lastName = lastName;
+		this.phone = phone;
+		this.age = age;
+		this.medications = medications;
+		this.allergies = allergies;
+	}
+
 	public String getFirestationNumber() {
 		return firestationNumber;
 	}
@@ -136,7 +151,16 @@ public class Person {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
+
+	public List<String> getMedications() {
+		return medications;
+	}
+
+
+	public List<String> getAllergies() {
+		return allergies;
+	}
+
 	
 	
 	

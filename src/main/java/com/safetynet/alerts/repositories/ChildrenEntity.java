@@ -17,7 +17,8 @@ public class ChildrenEntity {
 	public void setChildrens(List<Children> childrens) {
 		this.childrens = childrens;
 	}
-	public List<Person> getPersonFamily() {
+	public List<Person> getPersonFamily()
+	{
 		return personFamily;
 	}
 	public void setPersonFamily(List<Person> personFamily) {

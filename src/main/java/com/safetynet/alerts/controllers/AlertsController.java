@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.safetynet.alerts.repositories.AddressEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -118,7 +119,7 @@ public class AlertsController {
 				.stream()
 				.filter(c -> c.getFirestationNumber().equals(firestation))
 				.collect(Collectors.toList());
-		
+
 		for (Person person : localPerson) {
 			phoneNumber.add(person.getPhone());
 		}
@@ -129,9 +130,21 @@ public class AlertsController {
 
 	//A METTRE EN PLACE
 	@GetMapping("/fire")
-	public List<String> afficherHabitants(@RequestParam(name="address", required = true)String address) {
+	public AddressEntity afficherHabitants(@RequestParam(name="address", required = true)String address) {
 
-		return null;
+		AddressEntity addressEntity = new AddressEntity();
+		List<Person> personFromAddress = repo.getPersons()
+				.stream()
+				.filter(c -> c.getAddress().equals(address))
+				.collect(Collectors.toList());
+
+		for (Person person : personFromAddress) {
+			addressEntity.getPersonOfAddress().add(new Person(person.getLastName(),person.getPhone(),
+					person.getAge(),person.getMedications(),person.getAllergies()));
+			addressEntity.setFirestationNumber(person.getFirestationNumber());
+		}
+
+		return addressEntity;
 	}
 	
 	
