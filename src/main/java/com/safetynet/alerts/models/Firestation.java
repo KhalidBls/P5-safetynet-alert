@@ -11,13 +11,7 @@ public class Firestation {
 	private String station ;
 	
 	private List<Person> personToSave = new ArrayList<Person>();
-	
-	public List<Person> getPersonToSave() {
-		return personToSave;
-	}
 
-	
-	
 	public Firestation(String address, String station) {
 		super();
 		this.address = address;
@@ -27,8 +21,10 @@ public class Firestation {
 	public  void addPerson(Person person) {
 		personToSave.add(person);
 	}
-	
 
+	public List<Person> getPersonToSave() {
+		return personToSave;
+	}
 	public String getAddress() {
 		return address;
 	}

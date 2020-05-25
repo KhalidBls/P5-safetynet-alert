@@ -2,6 +2,7 @@ package com.safetynet.alerts.repositories;
 
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.json.simple.JSONArray;
@@ -12,24 +13,22 @@ import com.safetynet.alerts.models.Firestation;
 import com.safetynet.alerts.models.Medicalrecord;
 import com.safetynet.alerts.models.Person;
 import com.safetynet.alerts.services.Service;
+import org.springframework.stereotype.Repository;
 
-@org.springframework.stereotype.Service
+@Repository
 public class EntitiesRepository {
 
 	Service service;
 	JSONObject jsonObj;
 	
-	List<Person> persons;
-	List<Firestation> firestations;
-	List<Medicalrecord> medicalrecords;
+	List<Person> persons = new ArrayList<>();
+	List<Firestation> firestations = new ArrayList<>();
+	List<Medicalrecord> medicalrecords = new ArrayList<>();
 
 	@Autowired
-	public EntitiesRepository(Service service,List<Person> persons,List<Firestation> firestations,List<Medicalrecord> medicalrecords) throws ParseException {
+	public EntitiesRepository(Service service) throws ParseException {
 		super();
 		this.service = service;
-		this.persons = persons;
-		this.firestations = firestations;
-		this.medicalrecords=medicalrecords;
 		jsonObj = service.getJobj();
 		
 	}

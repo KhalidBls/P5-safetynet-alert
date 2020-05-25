@@ -126,6 +126,13 @@ public class AlertsController {
 		return phoneNumber;
 		
 	}
+
+	//A METTRE EN PLACE
+	@GetMapping("/fire")
+	public List<String> afficherHabitants(@RequestParam(name="address", required = true)String address) {
+
+		return null;
+	}
 	
 	
 	@GetMapping(value = "/medicalrecord")

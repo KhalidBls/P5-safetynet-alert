@@ -1,7 +1,11 @@
 package com.safetynet.alerts.models;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class Medicalrecord {
 
@@ -11,9 +15,8 @@ public class Medicalrecord {
 	private List<String> medications = new ArrayList<String>();
 	private List<String> allergies = new ArrayList<String>();
 	
-	
-	
-	
+
+
 	public Medicalrecord(String firstName, String lastName, String birthdate) {
 		super();
 		this.firstName = firstName;
