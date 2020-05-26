@@ -125,7 +125,8 @@ public class AlertsController {
 		
 	}
 
-	//A METTRE EN PLACE
+
+
 	@GetMapping("/fire")
 	public AddressEntity afficherHabitants(@RequestParam(name="address", required = true)String address) {
 		AddressEntity addressEntity = new AddressEntity();
