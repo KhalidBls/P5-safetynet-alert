@@ -143,7 +143,22 @@ public class AlertsController {
 
 		return addressEntity;
 	}
-	
+
+	@GetMapping("/communityEmail")
+	public List<String> afficherEmailOfCity(@RequestParam(name="city", required = true)String city) {
+		List<String> emailCommunity = new ArrayList<>();
+		List<Person> personFromCity = repo.getPersons()
+				.stream()
+				.filter(c -> c.getCity().equals(city))
+				.collect(Collectors.toList());
+
+		for (Person person : personFromCity) {
+			emailCommunity.add(person.getEmail());
+		}
+
+		return emailCommunity;
+
+	}
 	
 	@GetMapping(value = "/medicalrecord")
 	public List<Medicalrecord> afficherMedicalrecord() throws Exception {
