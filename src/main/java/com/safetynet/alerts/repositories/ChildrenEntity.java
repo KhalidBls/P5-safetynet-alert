@@ -3,7 +3,6 @@ package com.safetynet.alerts.repositories;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.safetynet.alerts.models.Children;
 import com.safetynet.alerts.models.Person;
 
 public class ChildrenEntity {

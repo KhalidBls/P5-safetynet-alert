@@ -120,7 +120,6 @@ public class AlertsController {
 		personFiltres.setFilters(listDeNosFiltres);
 
 		return personFiltres;
-
 	}
 
 	@GetMapping("/fire")
