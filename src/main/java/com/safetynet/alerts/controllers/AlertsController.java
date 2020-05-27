@@ -97,29 +97,52 @@ public class AlertsController {
 	
 	
 	@GetMapping("/childAlert")
-	public ChildrenEntity afficherEnfant(@RequestParam(name="address", required = true)String address) {
+	public MappingJacksonValue afficherEnfant(@RequestParam(name="address", required = true)String address) {
 		
 		ChildrenEntity childrenEntity = new ChildrenEntity();
-		List<Person> childPerson = repo.getPersons()
+		childrenEntity.setChildrens(repo.getPersons()
 				.stream()
 				.filter(c -> c.getAge() < 18 && c.getAddress().equals(address))
-				.collect(Collectors.toList());
+				.collect(Collectors.toList()));
 		
-		List<Person> adultPerson = repo.getPersons()
+		childrenEntity.setPersonFamily(repo.getPersons()
 				.stream()
 				.filter(c -> c.getAge() > 18 && c.getAddress().equals(address))
-				.collect(Collectors.toList());
-		
-		for (Person person : adultPerson) {
-			childrenEntity.getPersonFamily().add(person);
-		}
-		
-		for(int i =0;i < childPerson.size(); i++) {
-			childrenEntity.getChildrens().add(new Children(childPerson.get(i).getFirstName()
-					,childPerson.get(i).getLastName(),childPerson.get(i).getAge()));
-		}
-		
-		return childrenEntity;
+				.collect(Collectors.toList()));
+
+		if(childrenEntity.getChildrens().size() == 0)
+			return null;
+
+		SimpleBeanPropertyFilter monFiltre = SimpleBeanPropertyFilter.serializeAllExcept("address","city","zip","email","phone"
+				,"birthdate","firestationNumber","medications","allergies");
+		FilterProvider listDeNosFiltres = new SimpleFilterProvider().addFilter("monFiltreDynamique", monFiltre);
+		MappingJacksonValue personFiltres = new MappingJacksonValue(childrenEntity);
+		personFiltres.setFilters(listDeNosFiltres);
+
+		return personFiltres;
+
+	}
+
+	@GetMapping("/fire")
+	public MappingJacksonValue afficherHabitants(@RequestParam(name="address", required = true)String address) {
+		AddressEntity addressEntity = new AddressEntity();
+
+		addressEntity.setPersons( repo.getPersons()
+				.stream()
+				.filter(c -> c.getAddress().equals(address))
+				.collect(Collectors.toList()));
+
+		if(addressEntity.getPersons().size() > 0)
+			addressEntity.setFirestation(addressEntity.getPersons().get(0).getFirestationNumber());
+
+		SimpleBeanPropertyFilter monFiltre = SimpleBeanPropertyFilter.serializeAllExcept("firstName","address","city","zip","email"
+				,"birthdate","firestationNumber");
+		FilterProvider listDeNosFiltres = new SimpleFilterProvider().addFilter("monFiltreDynamique", monFiltre);
+		MappingJacksonValue personFiltres = new MappingJacksonValue(addressEntity);
+		personFiltres.setFilters(listDeNosFiltres);
+
+
+		return personFiltres;
 	}
 	
 	@GetMapping("/phoneAlert")
@@ -140,27 +163,7 @@ public class AlertsController {
 
 
 
-	@GetMapping("/fire")
-	public MappingJacksonValue afficherHabitants(@RequestParam(name="address", required = true)String address) {
-		AddressEntity addressEntity = new AddressEntity();
 
-		addressEntity.setPersons( repo.getPersons()
-				.stream()
-				.filter(c -> c.getAddress().equals(address))
-				.collect(Collectors.toList()));
-
-		if(addressEntity.getPersons().size() > 0)
-			addressEntity.setFirestation(addressEntity.getPersons().get(0).getFirestationNumber());
-
-		SimpleBeanPropertyFilter monFiltre = SimpleBeanPropertyFilter.serializeAllExcept("firstName","address","city","zip","email"
-				,"birthdate","firestationNumber");
-		FilterProvider listDeNosFiltres = new SimpleFilterProvider().addFilter("monFiltreDynamique", monFiltre);
-		MappingJacksonValue produitsFiltres = new MappingJacksonValue(addressEntity);
-		produitsFiltres.setFilters(listDeNosFiltres);
-
-
-		return produitsFiltres;
-	}
 
 	@GetMapping("/communityEmail")
 	public List<String> afficherEmailOfCity(@RequestParam(name="city", required = true)String city) {
