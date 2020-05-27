@@ -1,6 +1,6 @@
 package com.safetynet.alerts;
 
-import com.safetynet.alerts.repositories.EntitiesRepository;
+import com.safetynet.alerts.services.EntitiesRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
 @WebMvcTest
 @RunWith(SpringRunner.class)

@@ -1,14 +1,15 @@
-package com.safetynet.alerts.repositories;
+package com.safetynet.alerts.services;
 
 import com.safetynet.alerts.models.Person;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AddressEntity {
+@Service
+public class FireService {
 
     private List<Person> persons = new ArrayList<Person>();
-
     private String firestation;
 
     public List<Person> getPersons() {
