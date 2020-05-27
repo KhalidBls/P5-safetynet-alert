@@ -9,6 +9,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -17,8 +18,7 @@ import org.springframework.stereotype.Service;
 
 
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonFilter("monFiltreDynamique")
 public class Person {
 
 	private String firstName;
@@ -29,15 +29,11 @@ public class Person {
 	private String phone;
 	private String email;
 
-	@JsonIgnore
+
 	private String birthdate;
-	@JsonIgnore
 	private Integer age;
-	@JsonIgnore
 	private String firestationNumber;
-	@JsonIgnore
 	private List<String> medications = new ArrayList<>();
-	@JsonIgnore
 	private List<String> allergies = new ArrayList<>();
 
 

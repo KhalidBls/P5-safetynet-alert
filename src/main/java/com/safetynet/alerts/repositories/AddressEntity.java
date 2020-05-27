@@ -1,28 +1,29 @@
 package com.safetynet.alerts.repositories;
 
-import com.safetynet.alerts.models.PersonOfAddress;
+import com.safetynet.alerts.models.Person;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class AddressEntity {
 
-    private List<PersonOfAddress> personOfAddress = new ArrayList<PersonOfAddress>();
-    private String firestationNumber;
+    private List<Person> persons = new ArrayList<Person>();
 
-    public List<PersonOfAddress> getPersonOfAddress() {
-        return personOfAddress;
+    private String firestation;
+
+    public List<Person> getPersons() {
+        return persons;
     }
 
-    public void setFirestationNumber(String firestationNumber) {
-        this.firestationNumber = firestationNumber;
+    public void setFirestation(String firestation) {
+        this.firestation = firestation;
     }
 
-    public void setPersonOfAddress(List<PersonOfAddress> personOfAddress) {
-        this.personOfAddress = personOfAddress;
+    public void setPersons(List<Person> personOfAddress) {
+        this.persons = personOfAddress;
     }
 
     public String getFirestationNumber() {
-        return firestationNumber;
+        return firestation;
     }
 }
