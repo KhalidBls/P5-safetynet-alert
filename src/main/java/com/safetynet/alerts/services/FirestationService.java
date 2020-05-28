@@ -1,53 +1,35 @@
 package com.safetynet.alerts.services;
 
-
-import java.util.ArrayList;
-import java.util.List;
-
-import com.safetynet.alerts.models.Person;
+import com.safetynet.alerts.models.Firestation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class FirestationService {
 
-	private List<Person> persons = new ArrayList<Person>();
-	private   Integer numberOfAdults = 0;
-	private  Integer numberOfChilds = 0;
-	
+    @Autowired
+    private EntitiesRepository repo;
 
+    public EntitiesRepository getRepo() {
+        return repo;
+    }
 
-	public Integer getNumberOfAdults() {
-		return numberOfAdults;
-	}
+    public List<Firestation> getFirestations(){
+        return repo.getFirestations();
+    }
 
-	public void setNumberOfAdults(Integer numberOfAdults) {
-		this.numberOfAdults = numberOfAdults;
-	}
+    public Firestation findAll(String address) {
+        return repo.findFirestation(address);
+    }
 
-	public Integer getNumberOfChilds() {
-		return numberOfChilds;
-	}
+    public void save(Firestation firestation) {
+        repo.getFirestations().add(firestation);
+    }
 
-	public void setNumberOfChilds(Integer numberOfChilds) {
-		this.numberOfChilds = numberOfChilds;
-	}
-	
-
-	public List<Person> getPersons() {
-		return persons;
-	}
-
-	public void setPersons(List<Person> persons) {
-		this.persons = persons;
-	}
-
-	public void increaseAdult(){
-		numberOfAdults++;
-	}
-
-	public void increaseChild(){
-		numberOfChilds++;
-	}
-
-	
+    public void deleteStation(String address, String station) {
+        repo.getFirestations().removeIf(firestation -> (firestation.getAddress().equals(address))
+                && (firestation.getStation().equals(station)));
+    }
 }

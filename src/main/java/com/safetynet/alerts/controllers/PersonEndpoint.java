@@ -4,13 +4,11 @@ import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.safetynet.alerts.models.Person;
-import com.safetynet.alerts.services.EntitiesRepository;
 import com.safetynet.alerts.services.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 public class PersonEndpoint {

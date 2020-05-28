@@ -1,10 +1,12 @@
 package com.safetynet.alerts.models;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
+
 import java.util.ArrayList;
 import java.util.List;
 
 
-
+@JsonFilter("monFiltreDynamique")
 public class Firestation {
 
 	private String address;

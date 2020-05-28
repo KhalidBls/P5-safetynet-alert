@@ -14,14 +14,12 @@ import com.safetynet.alerts.services.FireService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.safetynet.alerts.services.ChildrenService;
 import com.safetynet.alerts.services.EntitiesRepository;
-import com.safetynet.alerts.services.FirestationService;
+import com.safetynet.alerts.services.ZoneService;
 
 @RestController
 public class AlertsController {
@@ -33,7 +31,7 @@ public class AlertsController {
 	@Autowired
 	private FireService fireService;
 	@Autowired
-	private FirestationService firestationService;
+	private ZoneService zoneService;
 
 
 	
@@ -59,22 +57,22 @@ public class AlertsController {
 	@GetMapping("/firestation")
 	public MappingJacksonValue afficherPersonnesDeZone(@RequestParam(name="stationNumber", required = true)String number) throws Exception {
 
-		firestationService.setPersons(repo.getPersons()
+		zoneService.setPersons(repo.getPersons()
 				  .stream()
 				  .filter(c -> c.getFirestationNumber().equals(number))
 				  .collect(Collectors.toList()));
 
-		for (Person person : firestationService.getPersons()) {
+		for (Person person : zoneService.getPersons()) {
 			if(person.getAge()>=18)
-				firestationService.increaseAdult();
+				zoneService.increaseAdult();
 			else
-				firestationService.increaseChild();
+				zoneService.increaseChild();
 		}
 
 		SimpleBeanPropertyFilter monFiltre = SimpleBeanPropertyFilter.serializeAllExcept("city","zip","email"
 				,"birthdate","age","firestationNumber","medications","allergies");
 		FilterProvider listDeNosFiltres = new SimpleFilterProvider().addFilter("monFiltreDynamique", monFiltre);
-		MappingJacksonValue personFiltres = new MappingJacksonValue(firestationService);
+		MappingJacksonValue personFiltres = new MappingJacksonValue(zoneService);
 		personFiltres.setFilters(listDeNosFiltres);
 
 		return  personFiltres;

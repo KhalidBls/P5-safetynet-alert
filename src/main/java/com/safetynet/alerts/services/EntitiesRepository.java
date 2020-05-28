@@ -31,6 +31,22 @@ public class EntitiesRepository {
 		jsonObj = recupererInfos();
 	}
 
+	public void setPersons(List<Person> persons) {
+		this.persons = persons;
+	}
+
+	public List<Firestation> getFirestations() {
+		return firestations;
+	}
+
+	public void setFirestations(List<Firestation> firestations) {
+		this.firestations = firestations;
+	}
+
+	public void setMedicalrecords(List<Medicalrecord> medicalrecords) {
+		this.medicalrecords = medicalrecords;
+	}
+
 	@PostConstruct
 	public void init() throws ParseException {
 		parsing();
@@ -146,5 +162,12 @@ public class EntitiesRepository {
 
 		return jobj;
 	}
-	
+
+	public Firestation findFirestation(String address) {
+		for (Firestation firestation : firestations) {
+			if (firestation.getAddress().equals(address))
+				return firestation;
+		}
+		return null;
+	}
 }
