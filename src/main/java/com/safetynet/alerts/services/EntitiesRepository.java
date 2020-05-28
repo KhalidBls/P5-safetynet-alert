@@ -36,9 +36,6 @@ public class EntitiesRepository {
 		parsing();
 	}
 
-	public JSONObject getJsonObj() {
-		return jsonObj;
-	}
 
 	public List<Person> getPersons() {
 		return persons;
@@ -80,16 +77,6 @@ public class EntitiesRepository {
 			}
 		}	
 	}
-	
-	public List<Firestation> getFirestations() {
-		return firestations;
-	}
-
-
-	public void setFirestations(List<Firestation> firestations) {
-		this.firestations = firestations;
-	}
-
 
 	public void parseJsonToMedicalrecordObject() throws ParseException {
 		JSONArray arr = (JSONArray) jsonObj.get("medicalrecords");

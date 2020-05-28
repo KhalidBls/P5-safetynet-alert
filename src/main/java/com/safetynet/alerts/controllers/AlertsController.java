@@ -62,7 +62,6 @@ public class AlertsController {
 	@PostMapping(value = "/person")
 	public List<Person> ajouterPersonnes(@RequestBody Person person) throws Exception {
 			repo.save(person);
-
 			return repo.getPersons();
 	}
 	
@@ -149,7 +148,6 @@ public class AlertsController {
 		for (Person person : localPerson) {
 			phoneNumber.add(person.getPhone());
 		}
-		
 		return phoneNumber;
 		
 	}
@@ -166,9 +164,7 @@ public class AlertsController {
 		for (Person person : personFromCity) {
 			emailCommunity.add(person.getEmail());
 		}
-
 		return emailCommunity;
-
 	}
 	
 	@GetMapping(value = "/medicalrecord")
