@@ -21,25 +21,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.safetynet.alerts.services.ChildrenService;
 import com.safetynet.alerts.services.EntitiesRepository;
-import com.safetynet.alerts.services.PersonsFromStationsService;
+import com.safetynet.alerts.services.FirestationService;
 
 @RestController
 public class AlertsController {
 
 	@Autowired
-	EntitiesRepository repo;
+	private EntitiesRepository repo;
 	@Autowired
-	ChildrenService childrenService;
+	private ChildrenService childrenService;
 	@Autowired
-	FireService fireService;
+	private FireService fireService;
 	@Autowired
-	PersonsFromStationsService personsToSave;
+	private FirestationService firestationService;
 
 
-	@GetMapping(value = "/person")
-	public List<Person> afficherPersonnes() throws Exception {
-		return repo.getPersons();
-	}
 	
 	@GetMapping("/personInfo")
 	public MappingJacksonValue afficherLaPersonne(@RequestParam(name="firstName", required = true)String firstName
@@ -58,32 +54,27 @@ public class AlertsController {
 
 		return produitsFiltres;
 	}
-	
-	@PostMapping(value = "/person")
-	public List<Person> ajouterPersonnes(@RequestBody Person person) throws Exception {
-			repo.save(person);
-			return repo.getPersons();
-	}
+
 	
 	@GetMapping("/firestation")
 	public MappingJacksonValue afficherPersonnesDeZone(@RequestParam(name="stationNumber", required = true)String number) throws Exception {
 
-		personsToSave.setPersons(repo.getPersons()
+		firestationService.setPersons(repo.getPersons()
 				  .stream()
 				  .filter(c -> c.getFirestationNumber().equals(number))
 				  .collect(Collectors.toList()));
 
-		for (Person person : personsToSave.getPersons()) {
+		for (Person person : firestationService.getPersons()) {
 			if(person.getAge()>=18)
-				personsToSave.increaseAdult();
+				firestationService.increaseAdult();
 			else
-				personsToSave.increaseChild();
+				firestationService.increaseChild();
 		}
 
 		SimpleBeanPropertyFilter monFiltre = SimpleBeanPropertyFilter.serializeAllExcept("city","zip","email"
 				,"birthdate","age","firestationNumber","medications","allergies");
 		FilterProvider listDeNosFiltres = new SimpleFilterProvider().addFilter("monFiltreDynamique", monFiltre);
-		MappingJacksonValue personFiltres = new MappingJacksonValue(personsToSave);
+		MappingJacksonValue personFiltres = new MappingJacksonValue(firestationService);
 		personFiltres.setFilters(listDeNosFiltres);
 
 		return  personFiltres;

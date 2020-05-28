@@ -8,7 +8,7 @@ import com.safetynet.alerts.models.Person;
 import org.springframework.stereotype.Service;
 
 @Service
-public class PersonsFromStationsService {
+public class FirestationService {
 
 	private List<Person> persons = new ArrayList<Person>();
 	private   Integer numberOfAdults = 0;

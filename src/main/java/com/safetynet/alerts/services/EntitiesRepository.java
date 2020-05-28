@@ -21,11 +21,11 @@ import javax.annotation.PostConstruct;
 @org.springframework.stereotype.Service
 public class EntitiesRepository {
 
-	JSONObject jsonObj;
-	
-	List<Person> persons = new ArrayList<>();
-	List<Firestation> firestations = new ArrayList<>();
-	List<Medicalrecord> medicalrecords = new ArrayList<>();
+	private JSONObject jsonObj;
+
+	private List<Person> persons = new ArrayList<>();
+	private List<Firestation> firestations = new ArrayList<>();
+	private List<Medicalrecord> medicalrecords = new ArrayList<>();
 
 	public EntitiesRepository() throws Exception {
 		jsonObj = recupererInfos();
@@ -105,7 +105,6 @@ public class EntitiesRepository {
 		
 	}
 
-
 	public Person findByName(String firstName,String lastName) {
 		for (Person person : persons) {
 			if(person.getFirstName().equals(firstName) && person.getLastName().contentEquals(lastName))
@@ -115,11 +114,6 @@ public class EntitiesRepository {
 	}
 
 
-
-	public Person save(Person person) {
-		persons.add(person);
-		return person;
-	}
 
 	public void parsing() throws ParseException {
 		parseJsonToPersonObject();

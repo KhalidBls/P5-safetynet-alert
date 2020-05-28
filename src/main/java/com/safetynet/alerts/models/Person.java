@@ -36,7 +36,10 @@ public class Person {
 	private List<String> medications = new ArrayList<>();
 	private List<String> allergies = new ArrayList<>();
 
-
+	public Person(String firstName,String lastName){
+		this.firstName = firstName;
+		this.lastName = lastName;
+	}
 
 	public Person(String firstName, String lastName, String address, String phone) {
 		super();
