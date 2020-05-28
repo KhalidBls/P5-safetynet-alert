@@ -1,26 +1,28 @@
-package com.safetynet.alerts.repositories;
+package com.safetynet.alerts.services;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.safetynet.alerts.models.Children;
 import com.safetynet.alerts.models.Person;
+import org.springframework.stereotype.Service;
 
-public class ChildrenEntity {
+@Service
+public class ChildrenService {
 
-	private List<Children> childrens = new ArrayList<Children>();
+	private List<Person> childrens = new ArrayList<Person>();
 	private List<Person> personFamily = new ArrayList<Person>();
 	
-	public List<Children> getChildrens() {
+	public List<Person> getChildrens() {
 		return childrens;
 	}
-	public void setChildrens(List<Children> childrens) {
+	public void setChildrens(List<Person> childrens) {
 		this.childrens = childrens;
 	}
 	public List<Person> getPersonFamily()
 	{
 		return personFamily;
 	}
+
 	public void setPersonFamily(List<Person> personFamily) {
 		this.personFamily = personFamily;
 	}

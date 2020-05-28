@@ -1,42 +1,41 @@
-package com.safetynet.alerts.repositories;
+package com.safetynet.alerts.services;
 
 
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.json.simple.parser.JSONParser;
+
 
 import com.safetynet.alerts.models.Firestation;
 import com.safetynet.alerts.models.Medicalrecord;
 import com.safetynet.alerts.models.Person;
-import com.safetynet.alerts.services.Service;
-import org.springframework.stereotype.Repository;
+import javax.annotation.PostConstruct;
 
-@Repository
+@org.springframework.stereotype.Service
 public class EntitiesRepository {
 
-	Service service;
 	JSONObject jsonObj;
 	
 	List<Person> persons = new ArrayList<>();
 	List<Firestation> firestations = new ArrayList<>();
 	List<Medicalrecord> medicalrecords = new ArrayList<>();
 
-	@Autowired
-	public EntitiesRepository(Service service) throws ParseException {
-		super();
-		this.service = service;
-		jsonObj = service.getJobj();
-		
+	public EntitiesRepository() throws Exception {
+		jsonObj = recupererInfos();
 	}
 
-	
-	public JSONObject getJsonObj() {
-		return jsonObj;
+	@PostConstruct
+	public void init() throws ParseException {
+		parsing();
 	}
+
 
 	public List<Person> getPersons() {
 		return persons;
@@ -60,7 +59,7 @@ public class EntitiesRepository {
 		}
 
 	}
-	
+
 	public void parseJsonToFirestationObject() {
 		JSONArray arr = (JSONArray) jsonObj.get("firestations");
 		
@@ -78,16 +77,6 @@ public class EntitiesRepository {
 			}
 		}	
 	}
-	
-	public List<Firestation> getFirestations() {
-		return firestations;
-	}
-
-
-	public void setFirestations(List<Firestation> firestations) {
-		this.firestations = firestations;
-	}
-
 
 	public void parseJsonToMedicalrecordObject() throws ParseException {
 		JSONArray arr = (JSONArray) jsonObj.get("medicalrecords");
@@ -124,19 +113,44 @@ public class EntitiesRepository {
 		}
 		return null;
 	}
-	
-	
-	
+
+
+
 	public Person save(Person person) {
 		persons.add(person);
 		return person;
 	}
-	
+
 	public void parsing() throws ParseException {
 		parseJsonToPersonObject();
 		parseJsonToMedicalrecordObject();
 		parseJsonToFirestationObject();
 
+	}
+
+	public JSONObject recupererInfos() throws Exception {
+		URL apiUrl = new URL("https://s3-eu-west-1.amazonaws.com/course.oc-static.com/projects/DA+Java+EN/P5+/data.json");
+		String inline = "";
+		HttpURLConnection conn = (HttpURLConnection)apiUrl.openConnection();
+		conn.setRequestMethod("GET");
+		conn.connect();
+
+		int responsecode = conn.getResponseCode();
+		if(responsecode != 200)
+			throw new RuntimeException("HttpResponseCode: " +responsecode);
+		else{
+
+			Scanner sc = new Scanner(apiUrl.openStream());
+			while(sc.hasNext())
+			{
+				inline+=sc.nextLine();
+			}
+			sc.close();
+		}
+		JSONParser parse = new JSONParser();
+		JSONObject  jobj = (JSONObject)parse.parse(inline);
+
+		return jobj;
 	}
 	
 }

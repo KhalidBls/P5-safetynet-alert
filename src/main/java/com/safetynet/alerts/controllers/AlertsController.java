@@ -2,111 +2,139 @@ package com.safetynet.alerts.controllers;
 
 
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.databind.ser.FilterProvider;
+import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
+import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.safetynet.alerts.models.*;
-import com.safetynet.alerts.repositories.AddressEntity;
+import com.safetynet.alerts.services.FireService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.safetynet.alerts.repositories.ChildrenEntity;
-import com.safetynet.alerts.repositories.EntitiesRepository;
-import com.safetynet.alerts.repositories.PersonsOfStations;
+import com.safetynet.alerts.services.ChildrenService;
+import com.safetynet.alerts.services.EntitiesRepository;
+import com.safetynet.alerts.services.PersonsFromStationsService;
 
 @RestController
 public class AlertsController {
-	
-	EntitiesRepository repo;
-	List<Person> personList;
 
 	@Autowired
-	public AlertsController(EntitiesRepository repo) throws ParseException {
-		super();
-		this.repo = repo;
-		repo.parsing();
-		personList = repo.getPersons();
-		
-	}
+	EntitiesRepository repo;
+	@Autowired
+	ChildrenService childrenService;
+	@Autowired
+	FireService fireService;
+	@Autowired
+	PersonsFromStationsService personsToSave;
+
 
 	@GetMapping(value = "/person")
 	public List<Person> afficherPersonnes() throws Exception {
-		
-		
-		System.out.println(personList.get(1).getBirthdate());
-		return personList;
-	
+		return repo.getPersons();
 	}
 	
 	@GetMapping("/personInfo")
-	public Person afficherLaPersonne(@RequestParam(name="firstName", required = true)String firstName
+	public MappingJacksonValue afficherLaPersonne(@RequestParam(name="firstName", required = true)String firstName
 			,@RequestParam(name="lastName", required = true)String lastName) throws Exception {
-		for(int i = 0;i<personList.size(); i++) {
-			if(personList.get(i).getFirstName().equals(firstName) && personList.get(i).getLastName().equals(lastName) )
-				return personList.get(i);
+		Person ourPerson = null;
+		for(int i = 0;i<repo.getPersons().size(); i++) {
+			if(repo.getPersons().get(i).getFirstName().equals(firstName) && repo.getPersons().get(i).getLastName().equals(lastName) )
+				ourPerson = repo.getPersons().get(i);
 		}
-		return null;
+		SimpleBeanPropertyFilter monFiltre = SimpleBeanPropertyFilter.serializeAllExcept("firstName","address","city","zip","phone","birthdate","age",
+				"firestationNumber");
+
+		FilterProvider listDeNosFiltres = new SimpleFilterProvider().addFilter("monFiltreDynamique", monFiltre);
+		MappingJacksonValue produitsFiltres = new MappingJacksonValue(ourPerson);
+		produitsFiltres.setFilters(listDeNosFiltres);
+
+		return produitsFiltres;
 	}
 	
 	@PostMapping(value = "/person")
 	public List<Person> ajouterPersonnes(@RequestBody Person person) throws Exception {
 			repo.save(person);
-			personList = repo.getPersons();
-			
-			return personList;
+			return repo.getPersons();
 	}
 	
 	@GetMapping("/firestation")
-	public PersonsOfStations afficherPersonnesDeZone(@RequestParam(name="stationNumber", required = true)String number) throws Exception {
+	public MappingJacksonValue afficherPersonnesDeZone(@RequestParam(name="stationNumber", required = true)String number) throws Exception {
 
-		List<Firestation> firestationObj = repo.getFirestations()
+		personsToSave.setPersons(repo.getPersons()
 				  .stream()
-				  .filter(c -> c.getStation().equals(number))
-				  .collect(Collectors.toList());
-		
+				  .filter(c -> c.getFirestationNumber().equals(number))
+				  .collect(Collectors.toList()));
 
-		PersonsOfStations personsToSave = new PersonsOfStations();
-		
-		for(int i = 0;i<firestationObj.size();i++) {
-			for(int j = 0;j<firestationObj.get(i).getPersonToSave().size();j++) 
-			personsToSave.addPerson(firestationObj.get(i).getPersonToSave().get(j)
-					,repo.findByName(firestationObj.get(i).getPersonToSave().get(j).getFirstName(),firestationObj.get(i).getPersonToSave().get(j).getLastName())
-					.getAge());
+		for (Person person : personsToSave.getPersons()) {
+			if(person.getAge()>=18)
+				personsToSave.increaseAdult();
+			else
+				personsToSave.increaseChild();
 		}
-		return  personsToSave;
+
+		SimpleBeanPropertyFilter monFiltre = SimpleBeanPropertyFilter.serializeAllExcept("city","zip","email"
+				,"birthdate","age","firestationNumber","medications","allergies");
+		FilterProvider listDeNosFiltres = new SimpleFilterProvider().addFilter("monFiltreDynamique", monFiltre);
+		MappingJacksonValue personFiltres = new MappingJacksonValue(personsToSave);
+		personFiltres.setFilters(listDeNosFiltres);
+
+		return  personFiltres;
 	}
 	
 	
 	@GetMapping("/childAlert")
-	public ChildrenEntity afficherEnfant(@RequestParam(name="address", required = true)String address) {
+	public MappingJacksonValue afficherEnfant(@RequestParam(name="address", required = true)String address) {
 		
-		ChildrenEntity childrenEntity = new ChildrenEntity();
-		List<Person> childPerson = repo.getPersons()
+
+		childrenService.setChildrens(repo.getPersons()
 				.stream()
 				.filter(c -> c.getAge() < 18 && c.getAddress().equals(address))
-				.collect(Collectors.toList());
+				.collect(Collectors.toList()));
 		
-		List<Person> adultPerson = repo.getPersons()
+		childrenService.setPersonFamily(repo.getPersons()
 				.stream()
 				.filter(c -> c.getAge() > 18 && c.getAddress().equals(address))
-				.collect(Collectors.toList());
-		
-		for (Person person : adultPerson) {
-			childrenEntity.getPersonFamily().add(person);
-		}
-		
-		for(int i =0;i < childPerson.size(); i++) {
-			childrenEntity.getChildrens().add(new Children(childPerson.get(i).getFirstName()
-					,childPerson.get(i).getLastName(),childPerson.get(i).getAge()));
-		}
-		
-		return childrenEntity;
+				.collect(Collectors.toList()));
+
+		if(childrenService.getChildrens().size() == 0)
+			return null;
+
+		SimpleBeanPropertyFilter monFiltre = SimpleBeanPropertyFilter.serializeAllExcept("address","city","zip","email","phone"
+				,"birthdate","firestationNumber","medications","allergies");
+		FilterProvider listDeNosFiltres = new SimpleFilterProvider().addFilter("monFiltreDynamique", monFiltre);
+		MappingJacksonValue personFiltres = new MappingJacksonValue(childrenService);
+		personFiltres.setFilters(listDeNosFiltres);
+
+		return personFiltres;
+	}
+
+	@GetMapping("/fire")
+	public MappingJacksonValue afficherHabitants(@RequestParam(name="address", required = true)String address) {
+
+		fireService.setPersons( repo.getPersons()
+				.stream()
+				.filter(c -> c.getAddress().equals(address))
+				.collect(Collectors.toList()));
+
+		if(fireService.getPersons().size() > 0)
+			fireService.setFirestation(fireService.getPersons().get(0).getFirestationNumber());
+
+		SimpleBeanPropertyFilter monFiltre = SimpleBeanPropertyFilter.serializeAllExcept("firstName","address","city","zip","email"
+				,"birthdate","firestationNumber");
+		FilterProvider listDeNosFiltres = new SimpleFilterProvider().addFilter("monFiltreDynamique", monFiltre);
+		MappingJacksonValue personFiltres = new MappingJacksonValue(fireService);
+		personFiltres.setFilters(listDeNosFiltres);
+
+
+		return personFiltres;
 	}
 	
 	@GetMapping("/phoneAlert")
@@ -120,29 +148,10 @@ public class AlertsController {
 		for (Person person : localPerson) {
 			phoneNumber.add(person.getPhone());
 		}
-		
 		return phoneNumber;
 		
 	}
 
-
-
-	@GetMapping("/fire")
-	public AddressEntity afficherHabitants(@RequestParam(name="address", required = true)String address) {
-		AddressEntity addressEntity = new AddressEntity();
-		List<Person> personFromAddress = repo.getPersons()
-				.stream()
-				.filter(c -> c.getAddress().equals(address))
-				.collect(Collectors.toList());
-
-		for (Person person: personFromAddress ) {
-			addressEntity.getPersonOfAddress().add(new PersonOfAddress(person.getLastName(),person.getPhone()
-					,person.getAge(),person.getMedications(),person.getAllergies()));
-			addressEntity.setFirestationNumber(person.getFirestationNumber());
-		}
-
-		return addressEntity;
-	}
 
 	@GetMapping("/communityEmail")
 	public List<String> afficherEmailOfCity(@RequestParam(name="city", required = true)String city) {
@@ -155,9 +164,7 @@ public class AlertsController {
 		for (Person person : personFromCity) {
 			emailCommunity.add(person.getEmail());
 		}
-
 		return emailCommunity;
-
 	}
 	
 	@GetMapping(value = "/medicalrecord")

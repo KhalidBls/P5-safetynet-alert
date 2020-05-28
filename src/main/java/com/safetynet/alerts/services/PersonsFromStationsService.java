@@ -1,18 +1,17 @@
-package com.safetynet.alerts.repositories;
+package com.safetynet.alerts.services;
 
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.safetynet.alerts.models.Person;
+import org.springframework.stereotype.Service;
 
-
-
-
-public class PersonsOfStations {
+@Service
+public class PersonsFromStationsService {
 
 	private List<Person> persons = new ArrayList<Person>();
-	private  Integer numberOfAdults = 0;
+	private   Integer numberOfAdults = 0;
 	private  Integer numberOfChilds = 0;
 	
 
@@ -42,12 +41,13 @@ public class PersonsOfStations {
 		this.persons = persons;
 	}
 
-	public void addPerson(Person person, int age) {
-		if(age > 18  )
-			this.numberOfAdults++;
-		else
-			this.numberOfChilds++;
-		persons.add(person);
+	public void increaseAdult(){
+		numberOfAdults++;
 	}
+
+	public void increaseChild(){
+		numberOfChilds++;
+	}
+
 	
 }
