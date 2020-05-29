@@ -155,10 +155,6 @@ public class AlertsController {
 		}
 		return emailCommunity;
 	}
-	
-	@GetMapping(value = "/medicalrecord")
-	public List<Medicalrecord> afficherMedicalrecord() throws Exception {
-		return repo.getMedicalrecords();
-	}
+
 	
 }

@@ -103,25 +103,25 @@ public class EntitiesRepository {
 			JSONObject jsonobj = (JSONObject)arr.get(i);
 			medicalrecords.add(new Medicalrecord((String )jsonobj.get("firstName"), (String )jsonobj.get("lastName")
 					,(String )jsonobj.get("birthdate")));
-			
-			findByName((String )jsonobj.get("firstName"),(String )jsonobj.get("lastName")).setBirthdate((String )jsonobj.get("birthdate"));
+
+			findPersonByName((String )jsonobj.get("firstName"),(String )jsonobj.get("lastName")).setBirthdate((String )jsonobj.get("birthdate"));
 			
 			JSONArray arr2 = (JSONArray) jsonobj.get("medications");
 			for(int j = 0; j < arr2.size(); j++) {
 				medicalrecords.get(i).addMedications((String)arr2.get(j));
-				findByName((String )jsonobj.get("firstName"),(String )jsonobj.get("lastName")).getMedications().add((String)arr2.get(j));
+				findPersonByName((String )jsonobj.get("firstName"),(String )jsonobj.get("lastName")).getMedications().add((String)arr2.get(j));
 			}
 			
 			JSONArray arr3 = (JSONArray) jsonobj.get("allergies");
 			for(int j = 0; j < arr3.size(); j++) {
 				medicalrecords.get(i).addAllergies((String)arr3.get(j));
-				findByName((String )jsonobj.get("firstName"),(String )jsonobj.get("lastName")).getAllergies().add((String)arr3.get(j));
+				findPersonByName((String )jsonobj.get("firstName"),(String )jsonobj.get("lastName")).getAllergies().add((String)arr3.get(j));
 			}
 		}		
 		
 	}
 
-	public Person findByName(String firstName,String lastName) {
+	public Person findPersonByName(String firstName,String lastName) {
 		for (Person person : persons) {
 			if(person.getFirstName().equals(firstName) && person.getLastName().contentEquals(lastName))
 				return person;
@@ -167,6 +167,14 @@ public class EntitiesRepository {
 		for (Firestation firestation : firestations) {
 			if (firestation.getAddress().equals(address))
 				return firestation;
+		}
+		return null;
+	}
+
+	public Medicalrecord findMedicalrecordByName(String firstName, String lastName) {
+		for (Medicalrecord medicalrecord : medicalrecords) {
+			if(medicalrecord.getFirstName().equals(firstName) && medicalrecord.getLastName().equals(lastName))
+				return medicalrecord;
 		}
 		return null;
 	}

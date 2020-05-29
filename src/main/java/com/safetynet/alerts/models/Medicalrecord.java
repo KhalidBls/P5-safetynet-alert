@@ -1,12 +1,13 @@
 package com.safetynet.alerts.models;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
-
+@JsonFilter("monFiltreDynamique")
 public class Medicalrecord {
 
 	private String firstName;

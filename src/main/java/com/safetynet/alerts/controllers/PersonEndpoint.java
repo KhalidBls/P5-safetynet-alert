@@ -30,7 +30,7 @@ public class PersonEndpoint {
 
     @PostMapping(value = "/person")
     public MappingJacksonValue addOrupdatePersonnes(@RequestBody Person person) throws Exception {
-        Person existingPerson = personService.findByName(person.getFirstName(),person.getLastName());
+        Person existingPerson = personService.findPersonByName(person.getFirstName(),person.getLastName());
         if(existingPerson == null)
             personService.save(person);
         else{

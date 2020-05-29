@@ -26,8 +26,8 @@ public class PersonService {
                 && (person.getLastName().equals(lastName)));
     }
 
-    public Person findByName(String firstName,String lastName){
-        return repo.findByName(firstName,lastName);
+    public Person findPersonByName(String firstName,String lastName){
+        return repo.findPersonByName(firstName,lastName);
     }
 
 }
