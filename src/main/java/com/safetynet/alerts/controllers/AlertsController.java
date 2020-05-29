@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.safetynet.alerts.models.*;
+import com.safetynet.alerts.services.EntitiesRepository;
 import com.safetynet.alerts.services.FireService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.json.MappingJacksonValue;
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.safetynet.alerts.services.ChildrenService;
-import com.safetynet.alerts.services.EntitiesRepository;
 import com.safetynet.alerts.services.ZoneService;
 
 @RestController
