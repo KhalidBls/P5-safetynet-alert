@@ -7,8 +7,12 @@ import com.safetynet.alerts.models.Medicalrecord;
 import com.safetynet.alerts.models.Person;
 import com.safetynet.alerts.services.MedicalrecordService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
 
 @RestController
 public class MedicalrecordEndpoint {
@@ -40,6 +44,7 @@ public class MedicalrecordEndpoint {
         }
         return afficherMedicalrecord();
     }
+
 
     @DeleteMapping(value = "/medicalRecord")
     public MappingJacksonValue deletePersons(@RequestBody Medicalrecord medicalrecord) throws Exception {
