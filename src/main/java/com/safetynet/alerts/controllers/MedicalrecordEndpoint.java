@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.safetynet.alerts.models.Medicalrecord;
-import com.safetynet.alerts.models.Person;
 import com.safetynet.alerts.services.MedicalrecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,19 +29,39 @@ public class MedicalrecordEndpoint {
         return medicalFiltres;
     }
 
-    @PostMapping(value = "/medicalRecord")
-    public MappingJacksonValue addOrUpdateMedicalRecord(@RequestBody Medicalrecord medicalrecord) throws Exception {
-        Medicalrecord existingMedialRecord = medicalrecordService.findMedicalrecordByName(medicalrecord.getFirstName(),medicalrecord.getLastName());
-        if(existingMedialRecord == null)
-            medicalrecordService.save(medicalrecord);
-        else{
-            existingMedialRecord.setFirstName(medicalrecord.getFirstName());
-            existingMedialRecord.setLastName(medicalrecord.getLastName());
-            existingMedialRecord.setBirthdate(medicalrecord.getBirthdate());
-            existingMedialRecord.setAllergies(medicalrecord.getAllergies());
-            existingMedialRecord.setMedications(medicalrecord.getMedications());
+
+
+    @PutMapping(value = "/medicalRecord")
+    public MappingJacksonValue updateMedicalrecord(@RequestBody Medicalrecord medicalrecord) throws Exception {
+        Medicalrecord existingMedicalrecord = medicalrecordService.findMedicalrecordByName(medicalrecord.getFirstName(),medicalrecord.getLastName());
+
+        if (existingMedicalrecord!=null) {
+            existingMedicalrecord.setFirstName(medicalrecord.getFirstName());
+            existingMedicalrecord.setLastName(medicalrecord.getLastName());
+            existingMedicalrecord.setBirthdate(medicalrecord.getBirthdate());
+            existingMedicalrecord.setMedications(medicalrecord.getMedications());
+            existingMedicalrecord.setAllergies(medicalrecord.getAllergies());
         }
         return afficherMedicalrecord();
+    }
+
+    @PostMapping(value = "/medicalRecord")
+    public ResponseEntity<Void> addMedicalrecord(@RequestBody Medicalrecord medicalrecord) throws Exception {
+        Medicalrecord addedMedicalrecord = medicalrecordService.save(medicalrecord);
+
+        if(addedMedicalrecord == null)
+            return ResponseEntity.noContent().build();
+
+        URI location = ServletUriComponentsBuilder
+                .fromUriString("http://localhost:8080/")
+                .path("/personInfo")
+                .queryParam("firstName",addedMedicalrecord.getFirstName())
+                .queryParam("lastName",addedMedicalrecord.getLastName())
+                .build()
+                .toUri();
+
+
+        return ResponseEntity.created(location).build();
     }
 
 
