@@ -55,7 +55,6 @@ public class PersonEndpoint {
         if(addedPerson == null)
             return ResponseEntity.noContent().build();
 
-
         URI location = ServletUriComponentsBuilder
                 .fromUriString("http://localhost:8080/")
                 .path("/personInfo")
