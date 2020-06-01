@@ -25,6 +25,7 @@ public class PersonEndpoint {
         SimpleBeanPropertyFilter monFiltre = SimpleBeanPropertyFilter.serializeAllExcept("birthdate","age"
                 ,"firestationNumber","medications","allergies");
         FilterProvider listDeNosFiltres = new SimpleFilterProvider().addFilter("monFiltreDynamique", monFiltre);
+
         MappingJacksonValue personFiltres = new MappingJacksonValue( personService.getPersons());
         personFiltres.setFilters(listDeNosFiltres);
 

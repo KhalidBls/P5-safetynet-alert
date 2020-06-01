@@ -1,5 +1,7 @@
 package com.safetynet.alerts.models;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -9,12 +11,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonFilter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 
 

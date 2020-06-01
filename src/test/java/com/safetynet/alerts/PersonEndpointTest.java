@@ -1,19 +1,24 @@
 package com.safetynet.alerts;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import com.safetynet.alerts.controllers.PersonEndpoint;
 import com.safetynet.alerts.models.Person;
 import com.safetynet.alerts.services.PersonService;
 import org.junit.Test;
+
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import org.springframework.http.MediaType;
+
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
 
 import java.util.Arrays;
 
@@ -23,6 +28,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+
 
 
 @WebMvcTest(PersonEndpoint.class)
@@ -35,18 +41,20 @@ public class PersonEndpointTest {
     @MockBean
     PersonService personService;
 
-    @Test
-    public void testAfficherPersonnes() throws Exception {
 
+    @Test
+    public void testGetPersonnes() throws Exception {
+
+        //GIVEN
         Person person1 = new Person("Bob","Bobby","avenue des Bob","Paris"
         ,"75000","0123456789","bob@mail.com");
         Person person2 = new Person("Jack","Jacky","avenue des Jack","Paris"
                 ,"75000","0123456788","jacky@mail.com");
 
-
-
+        //WHEN
         when(personService.getPersons()).thenReturn(Arrays.asList(person1, person2));
 
+        //THEN
         mockMvc.perform(get("/person")
                 .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -68,8 +76,81 @@ public class PersonEndpointTest {
                 .andExpect(status().is(200));
 
         verify(personService,times(1)).getPersons();
+    }
+
+    @Test
+    public void testCreatePersons() throws Exception {
+        //GIVEN
+
+        Person person;
+        ObjectMapper mapper = new ObjectMapper();
+        String personJSON = " {\n" +
+                "        \"firstName\": \"Louis\",\n" +
+                "        \"lastName\": \"Funes\",\n" +
+                "        \"address\": \"9999 Culver St\",\n" +
+                "        \"city\": \"Culver\",\n" +
+                "        \"zip\": \"97451\",\n" +
+                "        \"phone\": \"841-874-6512\",\n" +
+                "        \"email\": \"louis@email.com\"\n" +
+                "    }";
+        person = mapper.readValue(personJSON, Person.class);
+
+        when(personService.save(Mockito.any(Person.class))).thenReturn(person);
+
+        //WHEN & THEN
+        mockMvc.perform(post("/person")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(personJSON))
+                .andExpect(status().is(201));
+    }
 
 
+    @Test
+    public void testUpdatePersonsWhenPersonExist() throws Exception {
+        //GIVEN
+        Person person = new Person("Louis","Funes","avenue des Bob","Paris"
+                ,"75000","0123456789","bob@mail.com");
+
+        when(personService.findPersonByName("Louis","Funes")).thenReturn(person);
+
+        String personJSON = " {\n" +
+                "        \"firstName\": \"Louis\",\n" +
+                "        \"lastName\": \"Funes\",\n" +
+                "        \"address\": \"9999 Culver St\",\n" +
+                "        \"city\": \"PARIS\",\n" +
+                "        \"zip\": \"75000\",\n" +
+                "        \"phone\": \"0123456789\",\n" +
+                "        \"email\": \"louis@email.com\"\n" +
+                "    }";
+
+        //WHEN
+        mockMvc.perform(put("/person")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(personJSON))
+                .andExpect(status().is(200));
+
+        //THEN
+        assertEquals(person.getCity(),"PARIS");
+        assertEquals(person.getAddress(),"9999 Culver St");
+        assertEquals(person.getZip(),"75000");
+        assertEquals(person.getPhone(),"0123456789");
+        assertEquals(person.getEmail(),"louis@email.com");
 
     }
+
+    @Test
+    public void testDelete() throws Exception {
+        String personJSON = " {\n" +
+                "        \"firstName\": \"Louis\",\n" +
+                "        \"lastName\": \"Funes\"\n" +
+                "    }";
+
+        doNothing().when(personService).deleteByName("Louis","Funes");
+
+        mockMvc.perform(delete("/person")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(personJSON))
+                .andExpect(status().isOk());
+    }
+
 }
