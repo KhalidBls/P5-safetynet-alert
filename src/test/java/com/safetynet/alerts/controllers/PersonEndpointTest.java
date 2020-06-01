@@ -1,4 +1,4 @@
-package com.safetynet.alerts;
+package com.safetynet.alerts.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -72,16 +72,14 @@ public class PersonEndpointTest {
                 .andExpect(jsonPath("$[1].city", is("Paris")))
                 .andExpect(jsonPath("$[1].zip", is("75000")))
                 .andExpect(jsonPath("$[1].phone", is("0123456788")))
-                .andExpect(jsonPath("$[1].email", is("jacky@mail.com")))
-                .andExpect(status().is(200));
+                .andExpect(jsonPath("$[1].email", is("jacky@mail.com")));
 
         verify(personService,times(1)).getPersons();
     }
 
     @Test
-    public void testCreatePersons() throws Exception {
+    public void testCreatePersonsWithGoodArgument() throws Exception {
         //GIVEN
-
         Person person;
         ObjectMapper mapper = new ObjectMapper();
         String personJSON = " {\n" +
@@ -135,11 +133,10 @@ public class PersonEndpointTest {
         assertEquals(person.getZip(),"75000");
         assertEquals(person.getPhone(),"0123456789");
         assertEquals(person.getEmail(),"louis@email.com");
-
     }
 
     @Test
-    public void testDelete() throws Exception {
+    public void testDeleteWhenPersonExist() throws Exception {
         String personJSON = " {\n" +
                 "        \"firstName\": \"Louis\",\n" +
                 "        \"lastName\": \"Funes\"\n" +
