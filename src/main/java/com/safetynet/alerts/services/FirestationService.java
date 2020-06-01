@@ -24,8 +24,9 @@ public class FirestationService {
         return repo.findFirestation(address);
     }
 
-    public void save(Firestation firestation) {
+    public Firestation save(Firestation firestation) {
         repo.getFirestations().add(firestation);
+        return firestation;
     }
 
     public void deleteStation(String address, String station) {

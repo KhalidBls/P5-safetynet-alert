@@ -4,10 +4,15 @@ import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.safetynet.alerts.models.Firestation;
+import com.safetynet.alerts.models.Medicalrecord;
 import com.safetynet.alerts.services.FirestationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
 
 @RestController
 public class FirestationEndpoint {
@@ -25,16 +30,34 @@ public class FirestationEndpoint {
         return firestationFiltres;
     }
 
-    @PostMapping(value = "/firestation")
-    public MappingJacksonValue addOrupdateFirestation(@RequestBody Firestation firestation) throws Exception {
+
+
+    @PutMapping(value = "/firestation")
+    public MappingJacksonValue updateFirestationNumber(@RequestBody Firestation firestation) throws Exception {
         Firestation existingFirestation = firestationService.findAll(firestation.getAddress());
-        if(existingFirestation == null)
-            firestationService.save(firestation);
-        else {
-            existingFirestation.setStation(firestation.getAddress());
+
+        if (existingFirestation!=null) {
+            existingFirestation.setAddress(firestation.getAddress());
             existingFirestation.setStation(firestation.getStation());
         }
         return afficherStations();
+    }
+
+    @PostMapping(value = "/firestation")
+    public ResponseEntity<Void> addFirestation(@RequestBody Firestation firestation) throws Exception {
+        Firestation addedFirestation = firestationService.save(firestation);
+
+        if(addedFirestation == null)
+            return ResponseEntity.noContent().build();
+
+        URI location = ServletUriComponentsBuilder
+                .fromUriString("http://localhost:8080/")
+                .path("/firestation")
+                .build()
+                .toUri();
+
+
+        return ResponseEntity.created(location).build();
     }
 
     @DeleteMapping(value = "/firestation")
