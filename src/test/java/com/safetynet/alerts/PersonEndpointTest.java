@@ -9,12 +9,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.Arrays;
 
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -39,6 +43,8 @@ public class PersonEndpointTest {
         Person person2 = new Person("Jack","Jacky","avenue des Jack","Paris"
                 ,"75000","0123456788","jacky@mail.com");
 
+
+
         when(personService.getPersons()).thenReturn(Arrays.asList(person1, person2));
 
         mockMvc.perform(get("/person")
@@ -58,9 +64,12 @@ public class PersonEndpointTest {
                 .andExpect(jsonPath("$[1].city", is("Paris")))
                 .andExpect(jsonPath("$[1].zip", is("75000")))
                 .andExpect(jsonPath("$[1].phone", is("0123456788")))
-                .andExpect(jsonPath("$[1].email", is("jacky@mail.com")));
+                .andExpect(jsonPath("$[1].email", is("jacky@mail.com")))
+                .andExpect(status().is(200));
 
         verify(personService,times(1)).getPersons();
+
+
 
     }
 }
