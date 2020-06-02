@@ -1,4 +1,4 @@
-package com.safetynet.alerts.controllers;
+package com.safetynet.alerts;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -12,6 +12,7 @@ import org.mockito.Mockito;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import org.springframework.http.MediaType;
@@ -148,6 +149,8 @@ public class PersonEndpointTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(personJSON))
                 .andExpect(status().isOk());
+
+        verify(personService,times(1)).deleteByName("Louis","Funes");
     }
 
 }
