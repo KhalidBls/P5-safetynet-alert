@@ -1,4 +1,4 @@
-package com.safetynet.alerts;
+package com.safetynet.alerts.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
