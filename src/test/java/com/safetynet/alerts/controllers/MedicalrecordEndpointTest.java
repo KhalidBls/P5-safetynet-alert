@@ -1,6 +1,5 @@
 package com.safetynet.alerts.controllers;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.alerts.models.Medicalrecord;
 import com.safetynet.alerts.services.MedicalrecordService;
@@ -17,7 +16,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
