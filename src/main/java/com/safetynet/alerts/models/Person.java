@@ -1,6 +1,7 @@
 package com.safetynet.alerts.models;
 
 import com.fasterxml.jackson.annotation.JsonFilter;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -13,7 +14,7 @@ import java.util.List;
 
 
 
-
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonFilter("monFiltreDynamique")
 public class Person {
 

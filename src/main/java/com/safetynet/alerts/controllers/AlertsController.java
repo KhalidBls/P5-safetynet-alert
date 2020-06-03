@@ -34,23 +34,22 @@ public class AlertsController {
 	private ZoneService zoneService;
 
 
-	
 	@GetMapping("/personInfo")
-	public MappingJacksonValue afficherLaPersonne(@RequestParam(name="firstName", required = true)String firstName
+	public MappingJacksonValue afficherLesPersonne(@RequestParam(name="firstName", required = true)String firstName
 			,@RequestParam(name="lastName", required = true)String lastName) throws Exception {
-		Person ourPerson = null;
+		List<Person> ourPersonList = new ArrayList<>();
 		for(int i = 0;i<repo.getPersons().size(); i++) {
-			if(repo.getPersons().get(i).getFirstName().equals(firstName) && repo.getPersons().get(i).getLastName().equals(lastName) )
-				ourPerson = repo.getPersons().get(i);
+			if( repo.getPersons().get(i).getLastName().equals(lastName) )
+				ourPersonList.add(repo.getPersons().get(i));
 		}
-		SimpleBeanPropertyFilter monFiltre = SimpleBeanPropertyFilter.serializeAllExcept("firstName","address","city","zip","phone","birthdate","age",
+		SimpleBeanPropertyFilter monFiltre = SimpleBeanPropertyFilter.serializeAllExcept("firstName","city","zip","phone","birthdate",
 				"firestationNumber");
 
 		FilterProvider listDeNosFiltres = new SimpleFilterProvider().addFilter("monFiltreDynamique", monFiltre);
-		MappingJacksonValue produitsFiltres = new MappingJacksonValue(ourPerson);
-		produitsFiltres.setFilters(listDeNosFiltres);
+		MappingJacksonValue personsFiltres = new MappingJacksonValue(ourPersonList);
+		personsFiltres.setFilters(listDeNosFiltres);
 
-		return produitsFiltres;
+		return personsFiltres;
 	}
 
 	
