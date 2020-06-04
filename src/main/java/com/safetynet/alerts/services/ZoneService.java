@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 public class ZoneService {
 
 	private List<Person> persons = new ArrayList<Person>();
-	private   Integer numberOfAdults = 0;
-	private  Integer numberOfChilds = 0;
+	private Integer numberOfAdults = 0;
+	private Integer numberOfChilds = 0;
 	
 
 
@@ -49,5 +49,4 @@ public class ZoneService {
 		numberOfChilds++;
 	}
 
-	
 }

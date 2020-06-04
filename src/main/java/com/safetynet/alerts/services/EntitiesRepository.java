@@ -88,7 +88,6 @@ public class EntitiesRepository {
 				if(address.equals(persons.get(j).getAddress())) {
 					firestations.get(i).addPerson(new Person(persons.get(j).getFirstName(),persons.get(j).getLastName()
 							,persons.get(j).getAddress(),persons.get(j).getPhone()));
-					persons.get(j).setFirestationNumber(firestations.get(i).getStation());
 				}
 			}
 		}	
@@ -166,6 +165,14 @@ public class EntitiesRepository {
 	public Firestation findFirestation(String address) {
 		for (Firestation firestation : firestations) {
 			if (firestation.getAddress().equals(address))
+				return firestation;
+		}
+		return null;
+	}
+
+	public Firestation findFirestationByNumber(String number) {
+		for (Firestation firestation : firestations) {
+			if (firestation.getStation().equals(number))
 				return firestation;
 		}
 		return null;

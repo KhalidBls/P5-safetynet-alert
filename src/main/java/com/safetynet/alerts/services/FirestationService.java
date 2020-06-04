@@ -24,6 +24,10 @@ public class FirestationService {
         return repo.findFirestation(address);
     }
 
+    public Firestation findByNumber(String number) {
+        return repo.findFirestationByNumber(number);
+    }
+
     public Firestation save(Firestation firestation) {
         repo.getFirestations().add(firestation);
         return firestation;

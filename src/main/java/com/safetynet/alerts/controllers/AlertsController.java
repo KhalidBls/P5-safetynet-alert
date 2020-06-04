@@ -10,16 +10,12 @@ import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.safetynet.alerts.models.*;
-import com.safetynet.alerts.services.EntitiesRepository;
-import com.safetynet.alerts.services.FireService;
+import com.safetynet.alerts.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.safetynet.alerts.services.ChildrenService;
-import com.safetynet.alerts.services.ZoneService;
 
 @RestController
 public class AlertsController {
@@ -33,6 +29,9 @@ public class AlertsController {
 	@Autowired
 	private ZoneService zoneService;
 
+	@Autowired
+	private FirestationService firestationService;
+
 
 	@GetMapping("/personInfo")
 	public MappingJacksonValue afficherLesPersonne(@RequestParam(name="firstName", required = true)String firstName
@@ -42,8 +41,7 @@ public class AlertsController {
 			if( repo.getPersons().get(i).getLastName().equals(lastName) )
 				ourPersonList.add(repo.getPersons().get(i));
 		}
-		SimpleBeanPropertyFilter monFiltre = SimpleBeanPropertyFilter.serializeAllExcept("firstName","city","zip","phone","birthdate",
-				"firestationNumber");
+		SimpleBeanPropertyFilter monFiltre = SimpleBeanPropertyFilter.serializeAllExcept("firstName","city","zip","phone","birthdate");
 
 		FilterProvider listDeNosFiltres = new SimpleFilterProvider().addFilter("monFiltreDynamique", monFiltre);
 		MappingJacksonValue personsFiltres = new MappingJacksonValue(ourPersonList);
@@ -56,10 +54,13 @@ public class AlertsController {
 	@GetMapping("/firestation")
 	public MappingJacksonValue afficherPersonnesDeZone(@RequestParam(name="stationNumber", required = true)String number) throws Exception {
 
+		Firestation ourFirestation = firestationService.findByNumber(number);
+
 		zoneService.setPersons(repo.getPersons()
 				  .stream()
-				  .filter(c -> c.getFirestationNumber().equals(number))
+				  .filter(c -> c.getAddress().equals(ourFirestation.getAddress()))
 				  .collect(Collectors.toList()));
+
 
 		for (Person person : zoneService.getPersons()) {
 			if(person.getAge()>=18)
@@ -69,7 +70,7 @@ public class AlertsController {
 		}
 
 		SimpleBeanPropertyFilter monFiltre = SimpleBeanPropertyFilter.serializeAllExcept("city","zip","email"
-				,"birthdate","age","firestationNumber","medications","allergies");
+				,"birthdate","medications","allergies");
 		FilterProvider listDeNosFiltres = new SimpleFilterProvider().addFilter("monFiltreDynamique", monFiltre);
 		MappingJacksonValue personFiltres = new MappingJacksonValue(zoneService);
 		personFiltres.setFilters(listDeNosFiltres);
@@ -96,7 +97,7 @@ public class AlertsController {
 			return null;
 
 		SimpleBeanPropertyFilter monFiltre = SimpleBeanPropertyFilter.serializeAllExcept("address","city","zip","email","phone"
-				,"birthdate","firestationNumber","medications","allergies");
+				,"birthdate","medications","allergies");
 		FilterProvider listDeNosFiltres = new SimpleFilterProvider().addFilter("monFiltreDynamique", monFiltre);
 		MappingJacksonValue personFiltres = new MappingJacksonValue(childrenService);
 		personFiltres.setFilters(listDeNosFiltres);
@@ -107,16 +108,18 @@ public class AlertsController {
 	@GetMapping("/fire")
 	public MappingJacksonValue afficherHabitants(@RequestParam(name="address", required = true)String address) {
 
+		Firestation ourFirestation = firestationService.findAll(address);
+
 		fireService.setPersons( repo.getPersons()
 				.stream()
 				.filter(c -> c.getAddress().equals(address))
 				.collect(Collectors.toList()));
 
-		if(fireService.getPersons().size() > 0)
-			fireService.setFirestation(fireService.getPersons().get(0).getFirestationNumber());
+		if (ourFirestation!=null)
+			fireService.setFirestation(ourFirestation.getStation());
 
 		SimpleBeanPropertyFilter monFiltre = SimpleBeanPropertyFilter.serializeAllExcept("firstName","address","city","zip","email"
-				,"birthdate","firestationNumber");
+				,"birthdate");
 		FilterProvider listDeNosFiltres = new SimpleFilterProvider().addFilter("monFiltreDynamique", monFiltre);
 		MappingJacksonValue personFiltres = new MappingJacksonValue(fireService);
 		personFiltres.setFilters(listDeNosFiltres);
@@ -128,9 +131,12 @@ public class AlertsController {
 	@GetMapping("/phoneAlert")
 	public List<String> afficherNumberByFirestation(@RequestParam(name="firestation", required = true)String firestation) {
 		List<String> phoneNumber = new ArrayList<String>();
+
+		Firestation ourFirestation = firestationService.findByNumber(firestation);
+
 		List<Person> localPerson = repo.getPersons()
 				.stream()
-				.filter(c -> c.getFirestationNumber().equals(firestation))
+				.filter(c -> c.getAddress().equals(ourFirestation.getAddress()))
 				.collect(Collectors.toList());
 
 		for (Person person : localPerson) {

@@ -26,12 +26,10 @@ public class Person {
 	private String phone;
 	private String email;
 
-
 	private String birthdate;
 	private Integer age;
-	private String firestationNumber;
-	private List<String> medications = new ArrayList<>();
-	private List<String> allergies = new ArrayList<>();
+	private List<String> medications = new ArrayList<>(); //PAREIL
+	private List<String> allergies = new ArrayList<>(); //PAREIL
 
 	public Person(String firstName,String lastName){
 		this.firstName = firstName;
@@ -69,32 +67,30 @@ public class Person {
 		this.allergies = allergies;
 	}
 
-	public String getFirestationNumber() {
-		return firestationNumber;
-	}
-
-	public void setFirestationNumber(String firestationNumber) {
-		this.firestationNumber = firestationNumber;
-	}
 	
 	public String getBirthdate() {
 		return birthdate;
 	}
 
-	public void setBirthdate(String birthdate) throws ParseException {
+	public void setBirthdate(String birthdate)  {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		Date birthDateFormat = sdf.parse(birthdate);
+		Date birthDateFormat = null;
+		try {
+			birthDateFormat = sdf.parse(birthdate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 		Calendar now = Calendar.getInstance();
 		now.setTime(birthDateFormat);
-		 
+
 		int year = now.get(Calendar.YEAR);
 		int month = now.get(Calendar.MONTH) + 1;
 		int date = now.get(Calendar.DATE);
-		
+
 		LocalDate localD = LocalDate.of(year, month, date);
 		LocalDate nowDate = LocalDate.now();
 		Period diff1 = Period.between(localD, nowDate);
-		this.age =diff1.getYears();
+		this.age = diff1.getYears();
 		this.birthdate = birthdate;
 	}
 	
