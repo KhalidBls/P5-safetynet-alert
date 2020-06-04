@@ -12,10 +12,6 @@ public class FirestationService {
     @Autowired
     private EntitiesRepository repo;
 
-    public EntitiesRepository getRepo() {
-        return repo;
-    }
-
     public List<Firestation> getFirestations(){
         return repo.getFirestations();
     }
