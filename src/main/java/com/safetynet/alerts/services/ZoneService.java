@@ -4,9 +4,11 @@ package com.safetynet.alerts.services;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.safetynet.alerts.models.Person;
 import org.springframework.stereotype.Service;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Service
 public class ZoneService {
 

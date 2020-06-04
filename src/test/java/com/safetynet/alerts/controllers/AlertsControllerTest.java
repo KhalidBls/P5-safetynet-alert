@@ -1,10 +1,8 @@
 package com.safetynet.alerts.controllers;
 
+import com.safetynet.alerts.models.Firestation;
 import com.safetynet.alerts.models.Person;
-import com.safetynet.alerts.services.ChildrenService;
-import com.safetynet.alerts.services.EntitiesRepository;
-import com.safetynet.alerts.services.FireService;
-import com.safetynet.alerts.services.ZoneService;
+import com.safetynet.alerts.services.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +35,10 @@ public class AlertsControllerTest {
     private FireService fireService;
     @MockBean
     private ZoneService zoneService;
+
+    @MockBean
+    private FirestationService firestationService;
+
 
     @Test
     public void testAfficherLaPersonnesWhenExist() throws Exception {
@@ -74,6 +76,47 @@ public class AlertsControllerTest {
                 .param("lastName","Inconnu"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$",hasSize(0)));
+    }
+
+    @Test
+    public void testAfficherNumberByFirestationWhenGoodArgument() throws Exception {
+        Person person1 = new Person("Bob","Bobby","avenue des Jack&Bob","Paris"
+                ,"75000","1000000","bob@mail.com");
+        Person person2 = new Person("Jack","Jacky","avenue des Jack&Bob","Paris"
+                ,"75000","200000","jacky@mail.com");
+        Person person3 = new Person("Louis","Bill","avenue des nimporteOu","Paris"
+                ,"75000","5000000","jacky@mail.com");
+        Firestation firestation = new Firestation("avenue des Jack&Bob","33");
+
+        when(firestationService.findByNumber("33")).thenReturn(firestation);
+        when(repo.getPersons()).thenReturn(Arrays.asList(person1, person2,person3));
+
+        mockMvc.perform(get("/phoneAlert")
+                .contentType(APPLICATION_JSON)
+                .param("firestation","33"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$",hasSize(2)))
+                .andExpect(jsonPath("$[0]",is("1000000")))
+                .andExpect(jsonPath("$[1]",is("200000")));
+    }
+
+    @Test
+    public void testAfficherEmailByCityWhenGoodArgument() throws Exception {
+        Person person1 = new Person("Bob","Bobby","avenue des Jack&Bob","Paris"
+                ,"75000","1000000","bob@mail.com");
+        Person person2 = new Person("Jack","Jacky","avenue des Jack&Bob","Marseille"
+                ,"75000","200000","jacky@mail.com");
+        Person person3 = new Person("Louis","Bill","avenue des nimporteOu","Paris"
+                ,"75000","5000000","Louis@mail.com");
+
+        when(repo.getPersons()).thenReturn(Arrays.asList(person1, person2,person3));
+
+        mockMvc.perform(get("/communityEmail")
+                .contentType(APPLICATION_JSON)
+                .param("city","Marseille"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$",hasSize(1)))
+                .andExpect(jsonPath("$[0]",is("jacky@mail.com")));
     }
 
 }

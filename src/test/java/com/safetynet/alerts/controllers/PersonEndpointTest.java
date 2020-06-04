@@ -2,7 +2,6 @@ package com.safetynet.alerts.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import com.safetynet.alerts.controllers.PersonEndpoint;
 import com.safetynet.alerts.models.Person;
 import com.safetynet.alerts.services.PersonService;
 import org.junit.Test;
@@ -12,7 +11,6 @@ import org.mockito.Mockito;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import org.springframework.http.MediaType;

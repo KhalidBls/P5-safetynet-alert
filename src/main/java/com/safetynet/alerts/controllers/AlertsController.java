@@ -143,7 +143,6 @@ public class AlertsController {
 			phoneNumber.add(person.getPhone());
 		}
 		return phoneNumber;
-		
 	}
 
 
