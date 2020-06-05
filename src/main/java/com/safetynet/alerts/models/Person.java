@@ -73,24 +73,6 @@ public class Person {
 	}
 
 	public void setBirthdate(String birthdate)  {
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		Date birthDateFormat = null;
-		try {
-			birthDateFormat = sdf.parse(birthdate);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		Calendar now = Calendar.getInstance();
-		now.setTime(birthDateFormat);
-
-		int year = now.get(Calendar.YEAR);
-		int month = now.get(Calendar.MONTH) + 1;
-		int date = now.get(Calendar.DATE);
-
-		LocalDate localD = LocalDate.of(year, month, date);
-		LocalDate nowDate = LocalDate.now();
-		Period diff1 = Period.between(localD, nowDate);
-		this.age = diff1.getYears();
 		this.birthdate = birthdate;
 	}
 	
@@ -154,7 +136,11 @@ public class Person {
 		return allergies;
 	}
 
-	
-	
-	
+	public void setMedications(List<String> medications) {
+		this.medications = medications;
+	}
+
+	public void setAllergies(List<String> allergies) {
+		this.allergies = allergies;
+	}
 }

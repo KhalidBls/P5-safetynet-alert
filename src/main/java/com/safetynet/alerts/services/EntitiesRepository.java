@@ -27,6 +27,7 @@ public class EntitiesRepository {
 	private List<Firestation> firestations = new ArrayList<>();
 	private List<Medicalrecord> medicalrecords = new ArrayList<>();
 
+
 	public EntitiesRepository() throws Exception {
 		jsonObj = recupererInfos();
 	}
@@ -73,7 +74,6 @@ public class EntitiesRepository {
 					(String )jsonobj.get("zip"), (String )jsonobj.get("phone")
 					, (String )jsonobj.get("email")));
 		}
-
 	}
 
 	public void parseJsonToFirestationObject() {
@@ -108,13 +108,13 @@ public class EntitiesRepository {
 			JSONArray arr2 = (JSONArray) jsonobj.get("medications");
 			for(int j = 0; j < arr2.size(); j++) {
 				medicalrecords.get(i).addMedications((String)arr2.get(j));
-				findPersonByName((String )jsonobj.get("firstName"),(String )jsonobj.get("lastName")).getMedications().add((String)arr2.get(j));
+				//findPersonByName((String )jsonobj.get("firstName"),(String )jsonobj.get("lastName")).getMedications().add((String)arr2.get(j));
 			}
 			
 			JSONArray arr3 = (JSONArray) jsonobj.get("allergies");
 			for(int j = 0; j < arr3.size(); j++) {
 				medicalrecords.get(i).addAllergies((String)arr3.get(j));
-				findPersonByName((String )jsonobj.get("firstName"),(String )jsonobj.get("lastName")).getAllergies().add((String)arr3.get(j));
+				//findPersonByName((String )jsonobj.get("firstName"),(String )jsonobj.get("lastName")).getAllergies().add((String)arr3.get(j));
 			}
 		}		
 		

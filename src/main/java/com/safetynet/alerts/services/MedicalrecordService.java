@@ -29,4 +29,7 @@ public class MedicalrecordService {
         repo.getMedicalrecords().removeIf(person -> (person.getFirstName().equals(firstName))
                 && (person.getLastName().equals(lastName)));
     }
+
+
+
 }

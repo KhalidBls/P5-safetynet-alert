@@ -28,9 +28,12 @@ public class AlertsController {
 	private FireService fireService;
 	@Autowired
 	private ZoneService zoneService;
-
 	@Autowired
 	private FirestationService firestationService;
+	@Autowired
+	PersonService personService;
+	@Autowired
+	MedicalrecordService medicalrecordService;
 
 
 	@GetMapping("/personInfo")
@@ -41,6 +44,12 @@ public class AlertsController {
 			if( repo.getPersons().get(i).getLastName().equals(lastName) )
 				ourPersonList.add(repo.getPersons().get(i));
 		}
+
+		for (Person person : ourPersonList) {
+			person.setAllergies(medicalrecordService.findMedicalrecordByName(person.getFirstName(),person.getLastName()).getAllergies());
+			person.setMedications(medicalrecordService.findMedicalrecordByName(person.getFirstName(),person.getLastName()).getMedications());
+		}
+
 		SimpleBeanPropertyFilter monFiltre = SimpleBeanPropertyFilter.serializeAllExcept("firstName","city","zip","phone","birthdate");
 
 		FilterProvider listDeNosFiltres = new SimpleFilterProvider().addFilter("monFiltreDynamique", monFiltre);
@@ -61,6 +70,9 @@ public class AlertsController {
 				  .filter(c -> c.getAddress().equals(ourFirestation.getAddress()))
 				  .collect(Collectors.toList()));
 
+		for (Person person : zoneService.getPersons()) {
+			person.setAge(personService.ageCalculation(person.getBirthdate()));
+		}
 
 		for (Person person : zoneService.getPersons()) {
 			if(person.getAge()>=18)
@@ -81,7 +93,14 @@ public class AlertsController {
 	
 	@GetMapping("/childAlert")
 	public MappingJacksonValue afficherEnfant(@RequestParam(name="address", required = true)String address) {
-		
+
+		for (Person person : repo.getPersons()
+				.stream()
+				.filter(c -> c.getAddress().equals(address))
+				.collect(Collectors.toList())) {
+
+			person.setAge(personService.ageCalculation(person.getBirthdate()));
+		}
 
 		childrenService.setChildrens(repo.getPersons()
 				.stream()
@@ -114,6 +133,12 @@ public class AlertsController {
 				.stream()
 				.filter(c -> c.getAddress().equals(address))
 				.collect(Collectors.toList()));
+
+		for (Person person : fireService.getPersons()) {
+			person.setAge(personService.ageCalculation(person.getBirthdate()));
+			person.setAllergies(medicalrecordService.findMedicalrecordByName(person.getFirstName(),person.getLastName()).getAllergies());
+			person.setMedications(medicalrecordService.findMedicalrecordByName(person.getFirstName(),person.getLastName()).getMedications());
+		}
 
 		if (ourFirestation!=null)
 			fireService.setFirestation(ourFirestation.getStation());
