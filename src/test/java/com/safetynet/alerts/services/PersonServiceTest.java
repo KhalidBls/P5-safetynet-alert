@@ -118,4 +118,10 @@ public class PersonServiceTest {
         assertTrue(result.getPhone().equals("0123456788"));
     }
 
+    @Test
+    public void testAgeCalculationFromBirthdateShouldReturnAge(){
+        assertTrue(personService.ageCalculation("01/10/2000") == 19);
+        assertTrue(personService.ageCalculation("01/10/1997") == 22);
+    }
+
 }

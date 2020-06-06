@@ -1,6 +1,9 @@
 package com.safetynet.alerts.services;
 
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.ParseException;
@@ -137,7 +140,9 @@ public class EntitiesRepository {
 
 	}
 
-	public JSONObject recupererInfos() throws Exception {
+
+	//************************* POUR LE LIRE DEPUIS UNE URL ***************************************
+	/*public JSONObject recupererInfos() throws Exception {
 		URL apiUrl = new URL("https://s3-eu-west-1.amazonaws.com/course.oc-static.com/projects/DA+Java+EN/P5+/data.json");
 		String inline = "";
 		HttpURLConnection conn = (HttpURLConnection)apiUrl.openConnection();
@@ -160,6 +165,20 @@ public class EntitiesRepository {
 		JSONObject  jobj = (JSONObject)parse.parse(inline);
 
 		return jobj;
+	}*/
+
+	// ******************LE LIRE DEPUIS UN FICHIER***************************
+	public JSONObject recupererInfos() throws Exception {
+		String filepath = "src/data.json";
+		JSONParser parser = new JSONParser();
+		try {
+			Object obj = parser.parse(new FileReader(filepath));
+			JSONObject  jobj  = (JSONObject)obj;
+			return jobj;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	public Firestation findFirestation(String address) {

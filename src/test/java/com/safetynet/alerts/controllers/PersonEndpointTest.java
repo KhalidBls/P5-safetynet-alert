@@ -3,6 +3,7 @@ package com.safetynet.alerts.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.safetynet.alerts.models.Person;
+import com.safetynet.alerts.services.MedicalrecordService;
 import com.safetynet.alerts.services.PersonService;
 import org.junit.Test;
 

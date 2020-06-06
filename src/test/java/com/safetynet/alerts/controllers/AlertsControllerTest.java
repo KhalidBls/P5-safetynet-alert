@@ -1,6 +1,7 @@
 package com.safetynet.alerts.controllers;
 
 import com.safetynet.alerts.models.Firestation;
+import com.safetynet.alerts.models.Medicalrecord;
 import com.safetynet.alerts.models.Person;
 import com.safetynet.alerts.services.*;
 import org.junit.Test;
@@ -11,9 +12,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static org.hamcrest.Matchers.*;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -35,9 +39,12 @@ public class AlertsControllerTest {
     private FireService fireService;
     @MockBean
     private ZoneService zoneService;
-
     @MockBean
     private FirestationService firestationService;
+    @MockBean
+    private MedicalrecordService medicalrecordService;
+    @MockBean
+    private PersonService personService;
 
 
     @Test
@@ -48,6 +55,16 @@ public class AlertsControllerTest {
         Person person2 = new Person("Jack","Jacky","avenue des Jack","Paris"
                 ,"75000","0123456788","jacky@mail.com");
 
+        List<String> medications1 = new ArrayList<>();
+        medications1.add("dodoli");
+        medications1.add("dodol");
+
+        List<String> allergies1 = new ArrayList<>();
+        allergies1.add("lait");
+
+        Medicalrecord medicalrecord1 = new Medicalrecord("Peu","importe","01/10/1997",medications1,allergies1);
+
+        when(medicalrecordService.findMedicalrecordByName(anyString(),anyString())).thenReturn(medicalrecord1);
         when(repo.getPersons()).thenReturn(Arrays.asList(person1, person2));
 
         mockMvc.perform(get("/personInfo")
