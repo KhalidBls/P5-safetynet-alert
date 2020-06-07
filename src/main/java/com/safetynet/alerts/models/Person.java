@@ -36,12 +36,13 @@ public class Person {
 		this.lastName = lastName;
 	}
 
-	public Person(String firstName, String lastName, String address, String phone) {
+	public Person(String firstName, String lastName, String address, String phone,String birthdate) {
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.address = address;
 		this.phone = phone;
+		this.birthdate = birthdate;
 	}
 
 	public Person(){};

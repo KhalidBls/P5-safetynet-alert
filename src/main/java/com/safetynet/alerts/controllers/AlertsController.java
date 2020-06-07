@@ -34,6 +34,8 @@ public class AlertsController {
 	PersonService personService;
 	@Autowired
 	MedicalrecordService medicalrecordService;
+	@Autowired
+	FloodStationService floodStationService;
 
 
 	@GetMapping("/personInfo")
@@ -124,9 +126,31 @@ public class AlertsController {
 		return personFiltres;
 	}
 
+	@GetMapping("/flood/stations")
+	public MappingJacksonValue afficherHabitantsParStations(@RequestParam(name="stations", required = true)List<String> listOfStations) {
+		Firestation ourFirestation;
+		for(int i = 0;i < listOfStations.size();i++){
+			ourFirestation = firestationService.findByNumber(listOfStations.get(i));
+			for (Person person : ourFirestation.getPersonToSave()) {
+				person.setAge(personService.ageCalculation(person.getBirthdate()));
+				person.setAllergies(medicalrecordService.findMedicalrecordByName(person.getFirstName(),person.getLastName()).getAllergies());
+				person.setMedications(medicalrecordService.findMedicalrecordByName(person.getFirstName(),person.getLastName()).getMedications());
+			}
+			floodStationService.getFoyer().put(ourFirestation.getAddress(), ourFirestation.getPersonToSave());
+		}
+
+		SimpleBeanPropertyFilter monFiltre = SimpleBeanPropertyFilter.serializeAllExcept("address","city","zip","email"
+				,"birthdate");
+		FilterProvider listDeNosFiltres = new SimpleFilterProvider().addFilter("monFiltreDynamique", monFiltre);
+		MappingJacksonValue foyerFiltres = new MappingJacksonValue(floodStationService);
+		foyerFiltres.setFilters(listDeNosFiltres);
+
+		return foyerFiltres;
+
+	}
+
 	@GetMapping("/fire")
 	public MappingJacksonValue afficherHabitants(@RequestParam(name="address", required = true)String address) {
-
 		Firestation ourFirestation = firestationService.findAll(address);
 
 		fireService.setPersons( repo.getPersons()

@@ -90,7 +90,7 @@ public class EntitiesRepository {
 			for(int j =0;j<persons.size();j++) {
 				if(address.equals(persons.get(j).getAddress())) {
 					firestations.get(i).addPerson(new Person(persons.get(j).getFirstName(),persons.get(j).getLastName()
-							,persons.get(j).getAddress(),persons.get(j).getPhone()));
+							,persons.get(j).getAddress(),persons.get(j).getPhone(),persons.get(j).getBirthdate()));
 				}
 			}
 		}	
@@ -103,8 +103,8 @@ public class EntitiesRepository {
 			//Store the JSON objects in an array
 			//Get the index of the JSON object and print the values as per the index
 			JSONObject jsonobj = (JSONObject)arr.get(i);
-			medicalrecords.add(new Medicalrecord((String )jsonobj.get("firstName"), (String )jsonobj.get("lastName")
-					,(String )jsonobj.get("birthdate")));
+			medicalrecords.add(new Medicalrecord((String)jsonobj.get("firstName"), (String)jsonobj.get("lastName")
+					,(String)jsonobj.get("birthdate")));
 
 			findPersonByName((String )jsonobj.get("firstName"),(String )jsonobj.get("lastName")).setBirthdate((String )jsonobj.get("birthdate"));
 			
@@ -165,7 +165,7 @@ public class EntitiesRepository {
 		JSONObject  jobj = (JSONObject)parse.parse(inline);
 
 		return jobj;
-	}*/
+	} */
 
 	// ******************LE LIRE DEPUIS UN FICHIER***************************
 	public JSONObject recupererInfos() throws Exception {
