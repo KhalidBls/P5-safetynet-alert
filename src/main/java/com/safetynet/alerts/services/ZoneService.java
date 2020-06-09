@@ -33,7 +33,6 @@ public class ZoneService {
 	public void setNumberOfChilds(int numberOfChilds) {
 		this.numberOfChilds = numberOfChilds;
 	}
-	
 
 	public List<Person> getPersons() {
 		return persons;

@@ -31,11 +31,11 @@ public class AlertsController {
 	@Autowired
 	private FirestationService firestationService;
 	@Autowired
-	PersonService personService;
+	private PersonService personService;
 	@Autowired
-	MedicalrecordService medicalrecordService;
+	private MedicalrecordService medicalrecordService;
 	@Autowired
-	FloodStationService floodStationService;
+	private FloodStationService floodStationService;
 
 
 	@GetMapping("/personInfo")
