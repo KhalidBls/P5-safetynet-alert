@@ -23,7 +23,7 @@ public class PersonServiceTest {
 
 
     @Mock
-    EntitiesRepository repo;
+    DataInitialization repo;
 
     @InjectMocks
     PersonService personService;
@@ -103,11 +103,16 @@ public class PersonServiceTest {
 
     @Test
     public void testFindPersonByNameShouldReturnTheGoodPerson(){
-        //GIVEN
+        List<Person> ourListOfPerson = new ArrayList<>();
+        Person person1 = new Person("Bob","Bobby","avenue des Bob","Paris"
+                ,"75000","0123456789","bob@mail.com");
         Person person2 = new Person("Jack","Jacky","avenue des Jack","Paris"
                 ,"75000","0123456788","jacky@mail.com");
 
-        when(repo.findPersonByName("Jack","Jacky")).thenReturn(person2);
+        ourListOfPerson.add(person1);
+        ourListOfPerson.add(person2);
+
+        when(repo.getPersons()).thenReturn(ourListOfPerson);
 
         //WHEN
         Person result = personService.findPersonByName("Jack","Jacky");

@@ -10,6 +10,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -22,7 +23,7 @@ import com.safetynet.alerts.models.Person;
 import javax.annotation.PostConstruct;
 
 @org.springframework.stereotype.Service
-public class EntitiesRepository {
+public class DataInitialization {
 
 	private JSONObject jsonObj;
 
@@ -31,7 +32,7 @@ public class EntitiesRepository {
 	private List<Medicalrecord> medicalrecords = new ArrayList<>();
 
 
-	public EntitiesRepository() throws Exception {
+	public DataInitialization() throws Exception {
 		jsonObj = recupererInfos();
 	}
 
@@ -106,38 +107,42 @@ public class EntitiesRepository {
 			medicalrecords.add(new Medicalrecord((String)jsonobj.get("firstName"), (String)jsonobj.get("lastName")
 					,(String)jsonobj.get("birthdate")));
 
-			findPersonByName((String )jsonobj.get("firstName"),(String )jsonobj.get("lastName")).setBirthdate((String )jsonobj.get("birthdate"));
+			persons.stream()
+					.filter(p -> p.getFirstName().equals((String )jsonobj.get("firstName")) && p.getLastName().equals((String )jsonobj.get("lastName")))
+					.findAny().get().setBirthdate((String )jsonobj.get("birthdate"));
 			
 			JSONArray arr2 = (JSONArray) jsonobj.get("medications");
 			for(int j = 0; j < arr2.size(); j++) {
 				medicalrecords.get(i).addMedications((String)arr2.get(j));
-				//findPersonByName((String )jsonobj.get("firstName"),(String )jsonobj.get("lastName")).getMedications().add((String)arr2.get(j));
 			}
 			
 			JSONArray arr3 = (JSONArray) jsonobj.get("allergies");
 			for(int j = 0; j < arr3.size(); j++) {
 				medicalrecords.get(i).addAllergies((String)arr3.get(j));
-				//findPersonByName((String )jsonobj.get("firstName"),(String )jsonobj.get("lastName")).getAllergies().add((String)arr3.get(j));
 			}
 		}		
 		
 	}
-
-	public Person findPersonByName(String firstName,String lastName) {
-		for (Person person : persons) {
-			if(person.getFirstName().equals(firstName) && person.getLastName().contentEquals(lastName))
-				return person;
-		}
-		return null;
-	}
-
-
 
 	public void parsing() throws ParseException {
 		parseJsonToPersonObject();
 		parseJsonToMedicalrecordObject();
 		parseJsonToFirestationObject();
 
+	}
+
+	// ******************LE LIRE DEPUIS UN FICHIER***************************
+	public JSONObject recupererInfos() throws Exception {
+		String filepath = "src/data.json";
+		JSONParser parser = new JSONParser();
+		try {
+			Object obj = parser.parse(new FileReader(filepath));
+			JSONObject  jobj  = (JSONObject)obj;
+			return jobj;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 
@@ -167,41 +172,4 @@ public class EntitiesRepository {
 		return jobj;
 	} */
 
-	// ******************LE LIRE DEPUIS UN FICHIER***************************
-	public JSONObject recupererInfos() throws Exception {
-		String filepath = "src/data.json";
-		JSONParser parser = new JSONParser();
-		try {
-			Object obj = parser.parse(new FileReader(filepath));
-			JSONObject  jobj  = (JSONObject)obj;
-			return jobj;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	public Firestation findFirestation(String address) {
-		for (Firestation firestation : firestations) {
-			if (firestation.getAddress().equals(address))
-				return firestation;
-		}
-		return null;
-	}
-
-	public Firestation findFirestationByNumber(String number) {
-		for (Firestation firestation : firestations) {
-			if (firestation.getStation().equals(number))
-				return firestation;
-		}
-		return null;
-	}
-
-	public Medicalrecord findMedicalrecordByName(String firstName, String lastName) {
-		for (Medicalrecord medicalrecord : medicalrecords) {
-			if(medicalrecord.getFirstName().equals(firstName) && medicalrecord.getLastName().equals(lastName))
-				return medicalrecord;
-		}
-		return null;
-	}
 }

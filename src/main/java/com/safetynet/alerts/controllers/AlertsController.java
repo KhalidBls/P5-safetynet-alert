@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AlertsController {
 
 	@Autowired
-	private EntitiesRepository repo;
+	private DataInitialization repo;
 	@Autowired
 	private ChildrenService childrenService;
 	@Autowired
@@ -78,9 +78,9 @@ public class AlertsController {
 
 		for (Person person : zoneService.getPersons()) {
 			if(person.getAge()>=18)
-				zoneService.increaseAdult();
+				zoneService.setNumberOfAdults(zoneService.getNumberOfAdults()+1);
 			else
-				zoneService.increaseChild();
+				zoneService.setNumberOfChilds(zoneService.getNumberOfChilds()+1);
 		}
 
 		SimpleBeanPropertyFilter monFiltre = SimpleBeanPropertyFilter.serializeAllExcept("city","zip","email"
@@ -142,7 +142,7 @@ public class AlertsController {
 		SimpleBeanPropertyFilter monFiltre = SimpleBeanPropertyFilter.serializeAllExcept("address","city","zip","email"
 				,"birthdate");
 		FilterProvider listDeNosFiltres = new SimpleFilterProvider().addFilter("monFiltreDynamique", monFiltre);
-		MappingJacksonValue foyerFiltres = new MappingJacksonValue(floodStationService);
+		MappingJacksonValue foyerFiltres = new MappingJacksonValue(floodStationService.getFoyer());
 		foyerFiltres.setFilters(listDeNosFiltres);
 
 		return foyerFiltres;

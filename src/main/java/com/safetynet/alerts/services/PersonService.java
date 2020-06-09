@@ -16,7 +16,7 @@ import java.util.List;
 public class PersonService {
 
     @Autowired
-    private EntitiesRepository repo;
+    private DataInitialization repo;
 
     public List<Person> getPersons(){
         return repo.getPersons();
@@ -33,7 +33,11 @@ public class PersonService {
     }
 
     public Person findPersonByName(String firstName,String lastName){
-        return repo.findPersonByName(firstName,lastName);
+        for (Person person : repo.getPersons()) {
+            if(person.getFirstName().equals(firstName) && person.getLastName().contentEquals(lastName))
+                return person;
+        }
+        return null;
     }
 
     public int ageCalculation(String birthdate){

@@ -32,7 +32,7 @@ public class AlertsControllerTest {
     MockMvc mockMvc;
 
     @MockBean
-    private EntitiesRepository repo;
+    private DataInitialization repo;
     @MockBean
     private ChildrenService childrenService;
     @MockBean
@@ -45,6 +45,8 @@ public class AlertsControllerTest {
     private MedicalrecordService medicalrecordService;
     @MockBean
     private PersonService personService;
+    @MockBean
+    FloodStationService floodStationService;
 
 
     @Test

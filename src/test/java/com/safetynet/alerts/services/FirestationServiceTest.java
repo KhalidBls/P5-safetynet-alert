@@ -20,7 +20,7 @@ import static org.mockito.Mockito.when;
 public class FirestationServiceTest {
 
     @Mock
-    EntitiesRepository repo;
+    DataInitialization repo;
 
     @InjectMocks
     FirestationService firestationService;
@@ -48,24 +48,32 @@ public class FirestationServiceTest {
     @Test
     public void testFindAllByAddressWithGoodAddress(){
         //GIVEN
-        Firestation firestation2 = new Firestation("avenue de Marseille","5");
+        Firestation firestation1 = new Firestation("avenue de Paris","2");
+        Firestation firestation2 = new Firestation("avenue de Marseille","7");
+        List<Firestation> ourList = new ArrayList<>();
+        ourList.add(firestation1);
+        ourList.add(firestation2);
 
-        when(repo.findFirestation("avenue de Marseille")).thenReturn(firestation2);
+        when(repo.getFirestations()).thenReturn(ourList);
 
         //WHEN
         Firestation result = firestationService.findAll("avenue de Marseille");
 
         //THEN
         assertTrue(result.getAddress().equals("avenue de Marseille"));
-        assertTrue(result.getStation().equals("5"));
+        assertTrue(result.getStation().equals("7"));
     }
 
     @Test
     public void testFindFirestationByNumberWithGoodNumberShouldReturnGoodFirestation(){
         //GIVEN
         Firestation firestation1 = new Firestation("avenue de Paris","2");
+        Firestation firestation2 = new Firestation("avenue de Marseille","7");
+        List<Firestation> ourList = new ArrayList<>();
+        ourList.add(firestation1);
+        ourList.add(firestation2);
 
-        when(repo.findFirestationByNumber("2")).thenReturn(firestation1);
+        when(repo.getFirestations()).thenReturn(ourList);
 
         //WHEN
         Firestation result = firestationService.findByNumber("2");

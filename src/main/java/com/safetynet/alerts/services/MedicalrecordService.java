@@ -10,14 +10,18 @@ import java.util.List;
 public class MedicalrecordService {
 
     @Autowired
-    private EntitiesRepository repo;
+    private DataInitialization repo;
 
     public List<Medicalrecord> getMedicalrecords(){
         return repo.getMedicalrecords();
     }
 
     public Medicalrecord findMedicalrecordByName(String firstName, String lastName) {
-        return repo.findMedicalrecordByName(firstName,lastName);
+        for (Medicalrecord medicalrecord : repo.getMedicalrecords()) {
+            if(medicalrecord.getFirstName().equals(firstName) && medicalrecord.getLastName().equals(lastName))
+                return medicalrecord;
+        }
+        return null;
     }
 
     public Medicalrecord save(Medicalrecord medicalrecord) {

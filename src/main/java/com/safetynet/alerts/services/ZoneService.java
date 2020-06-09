@@ -13,24 +13,24 @@ import org.springframework.stereotype.Service;
 public class ZoneService {
 
 	private List<Person> persons = new ArrayList<Person>();
-	private Integer numberOfAdults = 0;
-	private Integer numberOfChilds = 0;
+	private int numberOfAdults = 0;
+	private int numberOfChilds = 0;
 	
 
 
-	public Integer getNumberOfAdults() {
+	public int getNumberOfAdults() {
 		return numberOfAdults;
 	}
 
-	public void setNumberOfAdults(Integer numberOfAdults) {
+	public void setNumberOfAdults(int numberOfAdults) {
 		this.numberOfAdults = numberOfAdults;
 	}
 
-	public Integer getNumberOfChilds() {
+	public int getNumberOfChilds() {
 		return numberOfChilds;
 	}
 
-	public void setNumberOfChilds(Integer numberOfChilds) {
+	public void setNumberOfChilds(int numberOfChilds) {
 		this.numberOfChilds = numberOfChilds;
 	}
 	
@@ -43,12 +43,5 @@ public class ZoneService {
 		this.persons = persons;
 	}
 
-	public void increaseAdult(){
-		numberOfAdults++;
-	}
-
-	public void increaseChild(){
-		numberOfChilds++;
-	}
 
 }

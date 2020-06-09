@@ -10,18 +10,26 @@ import java.util.List;
 public class FirestationService {
 
     @Autowired
-    private EntitiesRepository repo;
+    private DataInitialization repo;
 
     public List<Firestation> getFirestations(){
         return repo.getFirestations();
     }
 
     public Firestation findAll(String address) {
-        return repo.findFirestation(address);
+        for (Firestation firestation : repo.getFirestations()) {
+            if (firestation.getAddress().equals(address))
+                return firestation;
+        }
+        return null;
     }
 
     public Firestation findByNumber(String number) {
-        return repo.findFirestationByNumber(number);
+        for (Firestation firestation : repo.getFirestations()) {
+            if (firestation.getStation().equals(number))
+                return firestation;
+        }
+        return null;
     }
 
     public Firestation save(Firestation firestation) {
