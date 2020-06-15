@@ -32,10 +32,6 @@ public class DataInitialization {
 	private List<Medicalrecord> medicalrecords = new ArrayList<>();
 
 
-	public DataInitialization() throws Exception {
-		jsonObj = recupererInfos();
-	}
-
 	public void setPersons(List<Person> persons) {
 		this.persons = persons;
 	}
@@ -53,10 +49,13 @@ public class DataInitialization {
 	}
 
 	@PostConstruct
-	public void init() throws ParseException {
+	public void init() throws Exception {
 		parsing();
 	}
 
+	public DataInitialization() throws Exception {
+		jsonObj = recupererInfos();
+	}
 
 	public List<Person> getPersons() {
 		return persons;
@@ -137,8 +136,7 @@ public class DataInitialization {
 		JSONParser parser = new JSONParser();
 		try {
 			Object obj = parser.parse(new FileReader(filepath));
-			JSONObject  jobj  = (JSONObject)obj;
-			return jobj;
+			return (JSONObject)obj;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

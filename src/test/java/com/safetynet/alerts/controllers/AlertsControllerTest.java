@@ -35,19 +35,11 @@ public class AlertsControllerTest {
     @MockBean
     private DataInitialization repo;
     @MockBean
-    private ChildrenService childrenService;
-    @MockBean
-    private FireService fireService;
-    @MockBean
-    private ZoneService zoneService;
-    @MockBean
     private FirestationService firestationService;
     @MockBean
     private MedicalrecordService medicalrecordService;
     @MockBean
     private PersonService personService;
-    @MockBean
-    FloodStationService floodStationService;
 
 
     @Test

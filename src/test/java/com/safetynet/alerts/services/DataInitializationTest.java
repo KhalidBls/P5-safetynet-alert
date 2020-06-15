@@ -4,6 +4,7 @@ import com.safetynet.alerts.models.Firestation;
 import com.safetynet.alerts.models.Medicalrecord;
 import com.safetynet.alerts.models.Person;
 import org.junit.Test;
+
 import java.util.ArrayList;
 import java.util.List;
 

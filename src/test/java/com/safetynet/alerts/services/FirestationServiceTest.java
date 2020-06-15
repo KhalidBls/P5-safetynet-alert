@@ -1,6 +1,12 @@
 package com.safetynet.alerts.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.alerts.models.Firestation;
+import com.safetynet.alerts.models.Medicalrecord;
+import com.safetynet.alerts.models.Person;
+import org.json.simple.JSONObject;
 import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
@@ -8,11 +14,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -24,6 +34,10 @@ public class FirestationServiceTest {
 
     @InjectMocks
     FirestationService firestationService;
+    @Mock
+    MedicalrecordService medicalrecordService;
+    @Mock
+    PersonService personService;
 
     @Test
     public void testGetFirestationsShouldReturnAllFirestations(){
@@ -124,6 +138,33 @@ public class FirestationServiceTest {
 
         //THEN
         assertTrue(ourListOfFirestations.size()==2);
+    }
+
+    @Test
+    public void testSortPersonByAddress() throws JsonProcessingException {
+        Firestation firestation1 = new Firestation("avenue de Paris","2");
+        Person person1 = new Person("Bob","Bobby","avenue de Paris","Paris"
+                ,"75000","0123456789","bob@mail.com");
+        Person person2 = new Person("Jack","Jacky","avenue de Paris","Paris"
+                ,"75000","0123456788","jacky@mail.com");
+        person1.setBirthdate("01/10/1999");
+        person2.setBirthdate("01/10/1999");
+
+        when(repo.getFirestations()).thenReturn(Arrays.asList(firestation1));
+        when(repo.getPersons()).thenReturn(Arrays.asList(person1, person2));
+        when(personService.ageCalculation(anyString())).thenReturn(20);
+        when(medicalrecordService.findMedicalrecordByName(anyString(),anyString())).thenReturn(new Medicalrecord());
+        when(medicalrecordService.findMedicalrecordByName(anyString(),anyString())).thenReturn(new Medicalrecord());
+
+        JSONObject json = new JSONObject();
+        json.put("persons",Arrays.asList(person1, person2));
+        json.put("stations",firestation1.getStation());
+
+        //WHEN
+        JSONObject result = firestationService.sortPersonByAddress("avenue de Paris");
+
+        //THEN
+       assertTrue(result.toString().equals(json.toString()));
     }
 
 }

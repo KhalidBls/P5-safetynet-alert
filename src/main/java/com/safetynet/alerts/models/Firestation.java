@@ -11,7 +11,6 @@ public class Firestation {
 
 	private String address;
 	private String station;
-	
 	private List<Person> personToSave = new ArrayList<Person>();
 
 	public Firestation(String address, String station) {
@@ -41,6 +40,6 @@ public class Firestation {
 	public void setStation(String station) {
 		this.station = station;
 	}
-	
+
 
 }
