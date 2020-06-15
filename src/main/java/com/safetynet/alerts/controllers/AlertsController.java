@@ -64,6 +64,8 @@ public class AlertsController {
 	
 	@GetMapping("/firestation")
 	public MappingJacksonValue afficherPersonnesDeZone(@RequestParam(name="stationNumber", required = true)String number) throws Exception {
+		zoneService.setNumberOfChilds(0);
+		zoneService.setNumberOfAdults(0);
 
 		Firestation ourFirestation = firestationService.findByNumber(number);
 

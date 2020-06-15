@@ -3,27 +3,21 @@ package com.safetynet.alerts.services;
 import com.safetynet.alerts.models.Firestation;
 import com.safetynet.alerts.models.Medicalrecord;
 import com.safetynet.alerts.models.Person;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeEach;
-
-import java.text.ParseException;
+import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+
 public class DataInitializationTest {
 
     private DataInitialization repo;
 
-    @BeforeEach
-    private void setUp() throws Exception {
-        repo = new DataInitialization();
-    }
-
     @Test
     public void  testParseJsonToPersonObject() throws Exception {
         //GIVEN
+        repo = new DataInitialization();
         Person person1 = new Person("John","Boyd","1509 Culver St","Culver","97451","841-874-6512","jaboyd@email.com");
         Person person2 = new Person("Jacob","Boyd","1509 Culver St","Culver","97451","841-874-6513","drk@email.com");
 
@@ -36,8 +30,9 @@ public class DataInitializationTest {
     }
 
     @Test
-    public void parseJsonToFirestationObject(){
+    public void parseJsonToFirestationObject() throws Exception {
         //GIVEN
+        repo = new DataInitialization();
         Firestation firestation1 = new Firestation("1509 Culver St","3");
         Firestation firestation2 = new Firestation("29 15th St","2");
 
@@ -53,8 +48,9 @@ public class DataInitializationTest {
     }
 
     @Test
-    public void testParseJsonToMedicalrecordObject() throws ParseException {
+    public void testParseJsonToMedicalrecordObject() throws Exception {
         //GIVEN
+        repo = new DataInitialization();
         List<String> medications1 = new ArrayList<>();
         medications1.add("aznol:350mg");
         medications1.add("hydrapermazol:100mg");
@@ -80,8 +76,9 @@ public class DataInitializationTest {
     }
 
     @Test
-    public void testParsing() throws ParseException {
+    public void testParsing() throws Exception {
         //GIVEN
+        repo = new DataInitialization();
         Person person1 = new Person("John","Boyd","1509 Culver St","Culver","97451","841-874-6512","jaboyd@email.com");
         Firestation firestation1 = new Firestation("1509 Culver St","3");
 
@@ -99,7 +96,6 @@ public class DataInitializationTest {
         assertTrue(repo.getPersons().get(0).getFirstName().equals(person1.getFirstName()));
         assertTrue(repo.getFirestations().get(0).getStation().equals(firestation1.getStation()));
         assertTrue(repo.getMedicalrecords().get(0).getBirthdate().equals(medicalrecord1.getBirthdate()));
-
     }
 
 }

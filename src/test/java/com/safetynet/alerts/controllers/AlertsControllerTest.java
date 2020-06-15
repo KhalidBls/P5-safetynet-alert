@@ -17,7 +17,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.Matchers.*;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -137,5 +138,6 @@ public class AlertsControllerTest {
                 .andExpect(jsonPath("$",hasSize(1)))
                 .andExpect(jsonPath("$[0]",is("jacky@mail.com")));
     }
+
 
 }

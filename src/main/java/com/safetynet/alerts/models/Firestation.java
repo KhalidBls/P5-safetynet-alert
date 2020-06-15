@@ -10,7 +10,7 @@ import java.util.List;
 public class Firestation {
 
 	private String address;
-	private String station ;
+	private String station;
 	
 	private List<Person> personToSave = new ArrayList<Person>();
 
