@@ -20,10 +20,15 @@ import org.json.simple.parser.JSONParser;
 import com.safetynet.alerts.models.Firestation;
 import com.safetynet.alerts.models.Medicalrecord;
 import com.safetynet.alerts.models.Person;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.annotation.PostConstruct;
 
 @org.springframework.stereotype.Service
 public class DataInitialization {
+
+	private final Logger logger = LoggerFactory.getLogger(DataInitialization.class);
 
 	private JSONObject jsonObj;
 
@@ -136,9 +141,10 @@ public class DataInitialization {
 		JSONParser parser = new JSONParser();
 		try {
 			Object obj = parser.parse(new FileReader(filepath));
+			logger.info("Succès dans la conversion du fichier en JSONOBJECT");
 			return (JSONObject)obj;
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Erreur dans la conversion du fichier en JSONObject" + e.getMessage());
 		}
 		return null;
 	}

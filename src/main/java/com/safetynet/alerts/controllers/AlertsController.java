@@ -11,6 +11,8 @@ import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.safetynet.alerts.models.*;
 import com.safetynet.alerts.services.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class AlertsController {
+
+	private final Logger logger = LoggerFactory.getLogger(PersonEndpoint.class);
 
 	@Autowired
 	private DataInitialization repo;
@@ -34,6 +38,9 @@ public class AlertsController {
 	@GetMapping("/personInfo")
 	public MappingJacksonValue afficherLesPersonne(@RequestParam(name="firstName", required = true)String firstName
 			,@RequestParam(name="lastName", required = true)String lastName) throws Exception {
+
+		logger.info("HTTP GET request received at /personInfo URL with parameters : firstName = {} lastName = {}",firstName,lastName);
+
 		List<Person> ourPersonList = new ArrayList<>();
 		for(int i = 0;i<repo.getPersons().size(); i++) {
 			if( repo.getPersons().get(i).getLastName().equals(lastName) )
