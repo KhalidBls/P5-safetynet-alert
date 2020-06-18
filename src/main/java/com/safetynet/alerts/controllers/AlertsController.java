@@ -63,6 +63,7 @@ public class AlertsController {
 
 	@GetMapping("/firestation")
 	public MappingJacksonValue afficherPersonnesDeZone(@RequestParam(name="stationNumber", required = true)String number) throws Exception {
+		logger.info("HTTP GET request received at /firestation URL with parameters : number = {}",number);
 		String[] tab = {"city","zip","email","birthdate","medications","allergies"};
 		return firestationService.filter(tab,firestationService.sortPersonByStation(number));
 	}
@@ -70,24 +71,28 @@ public class AlertsController {
 	
 	@GetMapping("/childAlert")
 	public MappingJacksonValue afficherEnfant(@RequestParam(name="address", required = true)String address) {
+		logger.info("HTTP GET request received at /childAlert URL with parameters : address = {}",address);
 		String[] tab = {"address","city","zip","email","phone","birthdate","medications","allergies"};
 		return personService.filter(tab,personService.sortChildrenAndAdultByAddress(address));
 	}
 
 	@GetMapping("/flood/stations")
 	public MappingJacksonValue afficherHabitantsParStations(@RequestParam(name="stations", required = true)List<String> listOfStations) {
+		logger.info("HTTP GET request received at /flood/stations URL ");
 		String[] tab = {"address","city","zip","email","birthdate"};
 		return firestationService.filter(tab,firestationService.sortPersonByListOfStations(listOfStations));
 	}
 
 	@GetMapping("/fire")
 	public MappingJacksonValue afficherHabitants(@RequestParam(name="address", required = true)String address) {
+		logger.info("HTTP GET request received at /fire URL with parameters : address = {}",address);
 		String[] tab = {"firstName","address","city","zip","email","birthdate"};
 		return firestationService.filter(tab,firestationService.sortPersonByAddress(address));
 	}
 	
 	@GetMapping("/phoneAlert")
 	public List<String> afficherNumberByFirestation(@RequestParam(name="firestation", required = true)String firestation) {
+		logger.info("HTTP GET request received at /phoneAlert URL with parameters : firestation = {}",firestation);
 		List<String> phoneNumber = new ArrayList<String>();
 
 		Firestation ourFirestation = firestationService.findByNumber(firestation);
@@ -106,6 +111,7 @@ public class AlertsController {
 
 	@GetMapping("/communityEmail")
 	public List<String> afficherEmailOfCity(@RequestParam(name="city", required = true)String city) {
+		logger.info("HTTP GET request received at /communityEmail URL with parameters : city = {}",city);
 		List<String> emailCommunity = new ArrayList<>();
 		List<Person> personFromCity = repo.getPersons()
 				.stream()
