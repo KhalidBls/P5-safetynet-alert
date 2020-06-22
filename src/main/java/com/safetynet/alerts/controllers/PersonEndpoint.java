@@ -27,7 +27,7 @@ public class PersonEndpoint {
     PersonService personService;
 
     @GetMapping(value = "/person")
-    public MappingJacksonValue afficherPersonnes() throws Exception {
+    public MappingJacksonValue afficherPersons() throws Exception {
         logger.info("HTTP GET request received at /person URL");
 
         SimpleBeanPropertyFilter monFiltre = SimpleBeanPropertyFilter.serializeAllExcept("birthdate","age"

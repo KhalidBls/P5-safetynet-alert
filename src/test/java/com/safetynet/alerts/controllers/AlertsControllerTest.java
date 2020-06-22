@@ -33,8 +33,6 @@ public class AlertsControllerTest {
     MockMvc mockMvc;
 
     @MockBean
-    private DataInitialization repo;
-    @MockBean
     private FirestationService firestationService;
     @MockBean
     private MedicalrecordService medicalrecordService;
@@ -60,7 +58,7 @@ public class AlertsControllerTest {
         Medicalrecord medicalrecord1 = new Medicalrecord("Peu","importe","01/10/1997",medications1,allergies1);
 
         when(medicalrecordService.findMedicalrecordByName(anyString(),anyString())).thenReturn(medicalrecord1);
-        when(repo.getPersons()).thenReturn(Arrays.asList(person1, person2));
+        when(personService.getPersons()).thenReturn(Arrays.asList(person1, person2));
 
         mockMvc.perform(get("/personInfo")
                 .contentType(APPLICATION_JSON)
@@ -80,7 +78,7 @@ public class AlertsControllerTest {
         Person person2 = new Person("Jack","Jacky","avenue des Jack","Paris"
                 ,"75000","0123456788","jacky@mail.com");
 
-        when(repo.getPersons()).thenReturn(Arrays.asList(person1, person2));
+        when(personService.getPersons()).thenReturn(Arrays.asList(person1, person2));
 
         mockMvc.perform(get("/personInfo")
                 .contentType(APPLICATION_JSON)
@@ -101,7 +99,7 @@ public class AlertsControllerTest {
         Firestation firestation = new Firestation("avenue des Jack&Bob","33");
 
         when(firestationService.findByNumber("33")).thenReturn(firestation);
-        when(repo.getPersons()).thenReturn(Arrays.asList(person1, person2,person3));
+        when(personService.getPersons()).thenReturn(Arrays.asList(person1, person2,person3));
 
         mockMvc.perform(get("/phoneAlert")
                 .contentType(APPLICATION_JSON)
@@ -121,7 +119,7 @@ public class AlertsControllerTest {
         Person person3 = new Person("Louis","Bill","avenue des nimporteOu","Paris"
                 ,"75000","5000000","Louis@mail.com");
 
-        when(repo.getPersons()).thenReturn(Arrays.asList(person1, person2,person3));
+        when(personService.getPersons()).thenReturn(Arrays.asList(person1, person2,person3));
 
         mockMvc.perform(get("/communityEmail")
                 .contentType(APPLICATION_JSON)

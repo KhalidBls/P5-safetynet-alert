@@ -25,8 +25,6 @@ public class AlertsController {
 	private final Logger logger = LoggerFactory.getLogger(PersonEndpoint.class);
 
 	@Autowired
-	private DataInitialization repo;
-	@Autowired
 	private FirestationService firestationService;
 	@Autowired
 	private PersonService personService;
@@ -42,9 +40,9 @@ public class AlertsController {
 		logger.info("HTTP GET request received at /personInfo URL with parameters : firstName = {} lastName = {}",firstName,lastName);
 
 		List<Person> ourPersonList = new ArrayList<>();
-		for(int i = 0;i<repo.getPersons().size(); i++) {
-			if( repo.getPersons().get(i).getLastName().equals(lastName) )
-				ourPersonList.add(repo.getPersons().get(i));
+		for(int i = 0;i<personService.getPersons().size(); i++) {
+			if( personService.getPersons().get(i).getLastName().equals(lastName) )
+				ourPersonList.add(personService.getPersons().get(i));
 		}
 		for (Person person : ourPersonList) {
 			person.setAllergies(medicalrecordService.findMedicalrecordByName(person.getFirstName(),person.getLastName()).getAllergies());
@@ -84,7 +82,7 @@ public class AlertsController {
 	}
 
 	@GetMapping("/fire")
-	public MappingJacksonValue afficherHabitants(@RequestParam(name="address", required = true)String address) {
+	public MappingJacksonValue afficherHabitantsParAddress(@RequestParam(name="address", required = true)String address) {
 		logger.info("HTTP GET request received at /fire URL with parameters : address = {}",address);
 		String[] tab = {"firstName","address","city","zip","email","birthdate"};
 		return firestationService.filter(tab,firestationService.sortPersonByAddress(address));
@@ -97,7 +95,7 @@ public class AlertsController {
 
 		Firestation ourFirestation = firestationService.findByNumber(firestation);
 
-		List<Person> localPerson = repo.getPersons()
+		List<Person> localPerson = personService.getPersons()
 				.stream()
 				.filter(c -> c.getAddress().equals(ourFirestation.getAddress()))
 				.collect(Collectors.toList());
@@ -113,7 +111,7 @@ public class AlertsController {
 	public List<String> afficherEmailOfCity(@RequestParam(name="city", required = true)String city) {
 		logger.info("HTTP GET request received at /communityEmail URL with parameters : city = {}",city);
 		List<String> emailCommunity = new ArrayList<>();
-		List<Person> personFromCity = repo.getPersons()
+		List<Person> personFromCity = personService.getPersons()
 				.stream()
 				.filter(c -> c.getCity().equals(city))
 				.collect(Collectors.toList());

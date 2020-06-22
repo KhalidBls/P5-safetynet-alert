@@ -38,7 +38,7 @@ public class FirestationEndpoint {
 
 
     @PutMapping(value = "/firestation")
-    public MappingJacksonValue updateFirestationNumber(@RequestBody Firestation firestation) throws Exception {
+    public MappingJacksonValue updateFirestation(@RequestBody Firestation firestation) throws Exception {
         logger.info("HTTP PUT request received at /firestation URL");
         Firestation existingFirestation = firestationService.findAll(firestation.getAddress());
 
@@ -68,7 +68,7 @@ public class FirestationEndpoint {
     }
 
     @DeleteMapping(value = "/firestation")
-    public MappingJacksonValue deletePersons(@RequestBody Firestation firestation) throws Exception {
+    public MappingJacksonValue deleteFirestation(@RequestBody Firestation firestation) throws Exception {
         logger.info("HTTP DELETE request received at /firestation URL");
         firestationService.deleteStation(firestation.getAddress(),firestation.getStation());
         return afficherStations();

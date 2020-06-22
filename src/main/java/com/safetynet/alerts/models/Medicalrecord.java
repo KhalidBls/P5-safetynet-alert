@@ -73,7 +73,6 @@ public class Medicalrecord {
 
 	public void addAllergies(String allergie) {
 		allergies.add(allergie);
-		
 	}
 
 	

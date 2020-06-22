@@ -69,13 +69,12 @@ public class MedicalrecordEndpoint {
                 .build()
                 .toUri();
 
-
         return ResponseEntity.created(location).build();
     }
 
 
     @DeleteMapping(value = "/medicalRecord")
-    public MappingJacksonValue deletePersons(@RequestBody Medicalrecord medicalrecord) throws Exception {
+    public MappingJacksonValue deleteMedicalrecord(@RequestBody Medicalrecord medicalrecord) throws Exception {
         logger.info("HTTP DELETE request received at /medicalRecord URL");
         medicalrecordService.deleteByName(medicalrecord.getFirstName(),medicalrecord.getLastName());
 
