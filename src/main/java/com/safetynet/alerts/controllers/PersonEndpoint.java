@@ -56,7 +56,7 @@ public class PersonEndpoint {
             existingPerson.setPhone(person.getPhone());
             existingPerson.setEmail(person.getEmail());
         }
-        return afficherPersonnes();
+        return afficherPersons();
     }
 
     @PostMapping(value = "/person")
@@ -85,6 +85,6 @@ public class PersonEndpoint {
         logger.info("HTTP DELETE request received at /person URL");
         personService.deleteByName(person.getFirstName(),person.getLastName());
 
-        return afficherPersonnes();
+        return afficherPersons();
     }
 }
