@@ -32,7 +32,7 @@ public class AlertsController {
 	private MedicalrecordService medicalrecordService;
 
 
-
+	
 	@GetMapping("/personInfo")
 	public MappingJacksonValue afficherLesPersonne(@RequestParam(name="firstName", required = true)String firstName
 			,@RequestParam(name="lastName", required = true)String lastName) throws Exception {
