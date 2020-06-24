@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.safetynet.alerts.models.Firestation;
-import com.safetynet.alerts.models.Medicalrecord;
 import com.safetynet.alerts.services.FirestationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
