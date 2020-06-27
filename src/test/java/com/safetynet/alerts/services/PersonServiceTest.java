@@ -1,6 +1,7 @@
 package com.safetynet.alerts.services;
 
 import com.safetynet.alerts.models.Person;
+import org.json.simple.JSONObject;
 import org.junit.Test;
 
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,6 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -127,6 +129,28 @@ public class PersonServiceTest {
     public void testAgeCalculationFromBirthdateShouldReturnAge(){
         assertTrue(personService.ageCalculation("01/10/2000") == 19);
         assertTrue(personService.ageCalculation("01/10/1997") == 22);
+    }
+
+    @Test
+    public void testSortChildrenAndAdultByAddress(){
+        Person person1 = new Person("Bob","Bobby","avenue des Jack","Paris"
+                ,"75000","0123456789","bob@mail.com");
+        Person person2 = new Person("Jack","Jacky","avenue des Jack","Paris"
+                ,"75000","0123456788","jacky@mail.com");
+        Person person3 = new Person("Jack","Jacky","avenue des autres","Paris"
+                ,"75000","0123456788","jacky@mail.com");
+
+        person1.setBirthdate("01/10/1997");
+        person2.setBirthdate("01/10/1993");
+        person3.setBirthdate("01/10/2005");
+
+        when(repo.getPersons()).thenReturn(Arrays.asList(person1, person2, person3));
+
+        //WHEN
+        JSONObject json = personService.sortChildrenAndAdultByAddress("avenue des Jack");
+
+        //THEN
+        assertTrue(json.containsKey("avenue des Jack"));
     }
 
 }
